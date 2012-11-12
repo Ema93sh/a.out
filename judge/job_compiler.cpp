@@ -25,13 +25,18 @@ private:
    string str,lang;
    string jobId;
    bool error; 
-   int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA
+   string timeLimit,sourceLimit,memoryLimit;
+   string problemCode;
+   int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA ,5 - AC
    string strResult; // converted result code to string
    map<string,int> srcType; // maps sourceType
    map<int,string> compileParam;//maps sourceType to compile parameters
    map<int,string> runParam;
    int sourceType; // 1 - c , 2 - c++, 3 - python
 public:
+   string stringBuilder(string path){
+      
+   }
    JobCompiler( string jid )
    {
       srcType["C"]=1;
@@ -54,20 +59,21 @@ public:
    void doWork()
    {
       checkType();
-      checkWithInput();
    }
    
    void checkType()
    {
       MYSQL_RES *result;
       MYSQL_ROW row;
-      str="SELECT language FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
+      str="SELECT * FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
       if(mysql_query(conn,str.c_str())!=0)
          error_handle(conn);
       result=mysql_store_result(conn);
       row=mysql_fetch_row(result);
-      lang.assign(row[0]);
+      lang.assign(row[2]);
+      problemCode.assign(row[1]);
       sourceType=srcType[lang];
+      mysql_free_result(result);
       //if it is an interpreted language call runIt
       //else call compileIt
       if(sourceType==1||sourceType==2)
@@ -91,11 +97,22 @@ public:
    
    void runIt()
    {
-      string timeLimit="timeout 2.0s ";
+      MYSQL_RES *result;
+      MYSQL_ROW row;
+      str="SELECT * FROM problems WHERE problemCode=\""+problemCode+"\" LIMIT 1";
+      if(mysql_query(conn,str.c_str())!=0)
+         error_handle(conn);
+      result=mysql_store_result(conn);
+      row=mysql_fetch_row(result);
+      timeLimit.assign(row[5]);
+      sourceLimit.assign(row[4]);
+      memoryLimit.assign(row[6]);
+      mysql_free_result(result);
+      
+      string strtimeLimit="timeout "+timeLimit+"s";
       if(error) return;
       //start timer
-      //pipe the input file
-      result=system((timeLimit+runParam[sourceType]+">output.txt ").c_str());
+      result=system((strtimeLimit+runParam[sourceType]+" <../data/TEST/input.in >/tmp/online_judge/output.out ").c_str());
       //end timer
       if(result!=0){
          error=true;
@@ -103,12 +120,21 @@ public:
             result=3;
          else
             result=2;
+      }else{
+         checkOutput();
       }
    }
    
-   void checkWithInput()
+   void checkOutput()
    {
       if(error) return;
+      string path="../../data/"+problemCode+"/output.out";
+      string judgeOp=stringBuilder(path);
+      path="/tmp/online_judge/output.out";
+      string userOP=stringBuilder(path);
+      if(judgeOp.compare(userOP)!=0)result=4;
+      else result=5;
+      
    }
    
    int getResultCode()
