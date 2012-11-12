@@ -55,7 +55,6 @@ class Database
 		{
 			if( mysql_real_connect(conn, hostname.c_str(), username.c_str(), password.c_str(), dbname.c_str(), 0, NULL, 0 ) == NULL)
 			{
-				connected = false;
 				error_handle(conn);
 			}
 			else
@@ -79,11 +78,18 @@ class Database
 		{
 			result = mysql_store_result(conn);
 			num_fields = mysql_num_fields(result);
-			return num_fiels;
+			return num_fields;
 		}
 
 		MYSQL_ROW getRow()
 		{
-			return mysql_fetch_row(conn);
+			return mysql_fetch_row(result);
+		}
+
+		~Database()
+		{
+			if( result != NULL )
+			mysql_free_result(result);
+			mysql_close(conn);
 		}
 };
