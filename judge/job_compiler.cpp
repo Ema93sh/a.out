@@ -5,6 +5,7 @@
 #include <my_global.h>
 #include <mysql.h>
 #include "DBconnect.h"
+#include <map>
 using namespace std;
 
 
@@ -17,68 +18,87 @@ inline void error_handle(MYSQL *conn){
    printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
    exit(1);
 }
-
+MYSQL *conn;
 class JobCompiler
 {
 private:
+   string str,lang;
    string jobId;
    bool error; 
    int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA
    string strResult; // converted result code to string
+   map<string,int> srcType; // maps sourceType
+   map<int,string> compileParam;//maps sourceType to compile parameters
+   map<int,string> runParam;
    int sourceType; // 1 - c , 2 - c++, 3 - python
 public:
    JobCompiler( string jid )
    {
+      srcType["C"]=1;
+      srcType["CPP"]=2;
+      srcType["Python"]=3;
+      
+      
       error = false;
       jobId = jid;
       result = 0;
+      compileParam[1]="gcc -o output "+jobId+".c";
+      compileParam[2]="g++ "+jobId+".cpp -o output";
       
-      // testing
-      sourceType = 1;
+      runParam[1]="./output";
+      runParam[2]="./output";
+      runParam[3]="python "+jobId+".py";
+      
    }
    
    void doWork()
    {
       checkType();
-      compileIt();
-      runIt();
       checkWithInput();
    }
    
    void checkType()
    {
-      // later
+      MYSQL_RES *result;
+      MYSQL_ROW row;
+      str="SELECT language FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
+      if(mysql_query(conn,str.c_str())!=0)
+         error_handle(conn);
+      result=mysql_store_result(conn);
+      row=mysql_fetch_row(result);
+      lang.assign(row[0]);
+      sourceType=srcType[lang];
+      //if it is an interpreted language call runIt
+      //else call compileIt
+      if(sourceType==1||sourceType==2)
+         compileIt();
+      else
+         runIt();
    }
    
    void compileIt()
    {
       // need to check source code type
-      switch(sourceType)
-      {
-         case 1:
-         {
-            string compiler = "g++ ";
-            string arguments = " "; // send arguments to the compiler
-            string output = "-o output "; // instead we need to add only jobid with out extension
-            string f =  compiler + " " + arguments + output + jobId;
-            result = system(f.c_str());
-         }
-         break;
-         
-         default:
-            cout << "Unknown Source Type" << endl;
-      }
-      
+      result = system(compileParam[sourceType].c_str());
       if( result != 0 )
       {
          error = true;
          result = 1;
+      }else{
+         runIt();
       }
    }
    
    void runIt()
    {
       if(error) return;
+      //start timer
+      result=system((runParam[sourceType]+">output.txt ").c_str());
+      //end timer
+      if(result!=0){
+         error=true;
+         result=2;
+      }
    }
    
    void checkWithInput()
@@ -119,6 +139,7 @@ public:
 
 int main(int argc, char *argv[])
 {
+   freopen( "error.log", "w", stderr );
    if( argc < 2 )
    {
       cout << "Usage: ./jobcompiler jobid" << endl;
@@ -126,9 +147,7 @@ int main(int argc, char *argv[])
    }
    
    
-   //connect to db
-   MYSQL *conn;
-   
+   //connect to db   
    conn=mysql_init(NULL);
    //connection variable
    if(conn == NULL){
