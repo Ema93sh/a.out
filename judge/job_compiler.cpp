@@ -21,7 +21,6 @@ inline void error_handle(MYSQL *conn){
 MYSQL *conn;
 class JobCompiler
 {
-<<<<<<< HEAD
 private:
    string str,lang;
    string jobId;
@@ -136,6 +135,7 @@ public:
       
       return strResult;
    }
+};
 int main(int argc, char *argv[])
 {
    freopen( "error.log", "w", stderr );
