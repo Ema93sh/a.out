@@ -21,6 +21,7 @@ inline void error_handle(MYSQL *conn){
 MYSQL *conn;
 class JobCompiler
 {
+<<<<<<< HEAD
 private:
    string str,lang;
    string jobId;
@@ -93,6 +94,7 @@ public:
    {
       if(error) return;
       //start timer
+      //pipe the input file
       result=system((runParam[sourceType]+">output.txt ").c_str());
       //end timer
       if(result!=0){
@@ -134,9 +136,6 @@ public:
       
       return strResult;
    }
-   
-};
-
 int main(int argc, char *argv[])
 {
    freopen( "error.log", "w", stderr );
