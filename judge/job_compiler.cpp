@@ -31,6 +31,7 @@ private:
    map<int,string> compileParam;//maps sourceType to compile parameters
    map<int,string> runParam;
    int sourceType; // 1 - c , 2 - c++, 3 - python
+
 public:
    JobCompiler( string jid )
    {
