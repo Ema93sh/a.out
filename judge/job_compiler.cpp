@@ -91,14 +91,18 @@ public:
    
    void runIt()
    {
+      string timeLimit="timeout 2.0s ";
       if(error) return;
       //start timer
       //pipe the input file
-      result=system((runParam[sourceType]+">output.txt ").c_str());
+      result=system((timeLimit+runParam[sourceType]+">output.txt ").c_str());
       //end timer
       if(result!=0){
          error=true;
-         result=2;
+         if(result==31744)//change it later,error code when tle my machine is weird
+            result=3;
+         else
+            result=2;
       }
    }
    
@@ -114,7 +118,6 @@ public:
    
    string getResult()
    {
-      
       switch( result )
       {
          case 0:
@@ -128,7 +131,9 @@ public:
          case 2:
             strResult = "RE";
             break;
-            
+         case 3:
+            strResult="TLE";
+            break;
          default:
             strResult = "Unkown Result";
       }
