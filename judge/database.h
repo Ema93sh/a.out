@@ -18,6 +18,7 @@ class Database
 		MYSQL_RES  *result;
 		MYSQL_ROW row;
 		string query;
+		int num_fields;
 	public:
 		Database( string user, string pass )
 		{
@@ -63,9 +64,26 @@ class Database
 			return connected;
 		}
 
+		void query(string q)  // use it for simple query's like insert update etc . For queries that dont need stored result.
+		{
+			query = q;
+			if( mysql_query( conn, query.c_str() ) != 0 ) error_handle();
+		}
+
 		void setQuery(string q)
 		{
 			query = q;
 		}
 
+		int useQuery() // returns the number of fields/cols
+		{
+			result = mysql_store_result(conn);
+			num_fields = mysql_num_fields(result);
+			return num_fiels;
+		}
+
+		MYSQL_ROW getRow()
+		{
+			return mysql_fetch_row(conn);
+		}
 };
