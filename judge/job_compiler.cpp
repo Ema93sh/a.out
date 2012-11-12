@@ -13,30 +13,15 @@ using namespace std;
 class JobCompiler
 {
 	private:
+	
 		string jobId;
 		bool error; 
 		int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA
-		string strResult; // converted result code to string
+		string strResult; // convierted result code to string
 		int sourceType; // 1 - c , 2 - c++, 3 - python
-	public:
-		JobCompiler( string jid )
-		{
-			error = false;
-			jobId = jid;
-			result = 0;
-
-			// testing
-			sourceType = 1;
-		}
-
-		void doWork()
-		{
-			checkType();
-			compileIt();
-			runIt();
-			checkWithInput();
-		}
-
+		string errorMsg; // If an error has occured. Then this variable will hold the error msg
+	
+	  
 		void checkType()
 		{
 			 // later
@@ -71,11 +56,33 @@ class JobCompiler
 		void runIt()
 		{
 			if(error) return;
+			
+			
 		}
 
-		void checkWithInput()
+		void checkWithTestCases()
 		{
 			if(error) return;
+		}
+
+	public:
+
+		JobCompiler( string jid )
+		{
+			error = false;
+			jobId = jid;
+			result = 0;
+
+			// testing
+			sourceType = 1;
+		}
+
+		void doWork()
+		{
+			checkType();
+			compileIt();
+			runIt();
+			checkWithTestCases();
 		}
 
 		int getResultCode()
