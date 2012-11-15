@@ -127,8 +127,6 @@ public:
             
          case 1:
             strResult = "CME";
-            break;
-            
          case 2:
             strResult = "RE";
             break;
