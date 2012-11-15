@@ -16,6 +16,7 @@ using namespace std;
 class JobCompiler
 {
 private:
+   double timeElapsed;
    string workingDir;
    string str,lang;
    string jobId;
@@ -53,6 +54,8 @@ public:
       error = false;
       jobId = jid;
       result = 0;
+      timeElapsed=0.0;
+      
       ext[1]=".c";
       ext[2]=".cpp";
       ext[3]=".py";
@@ -71,6 +74,9 @@ public:
    void doWork()
    {
       checkType();
+      compileIt();
+      runIt();
+      checkOutput();
    }
    
    void checkType()
@@ -86,30 +92,27 @@ public:
       db->freeResult();
       //if it is an interpreted language call runIt
       //else call compileIt
-      if(sourceType==1||sourceType==2)
-         compileIt();
-      else
-         runIt();
    }
    
    void compileIt()
    {
+      system(("cp ../data/users/testuser/"+jobId+ext[sourceType]+" "+workingDir+jobId+ext[sourceType]).c_str());
+      if(!(sourceType==1||sourceType==2))return; // if not compiled languages
       //copy file to workingDir and work there
       //insert actual username here
-      system(("cp ../data/users/testuser/"+jobId+ext[sourceType]+" "+workingDir+jobId+ext[sourceType]).c_str());
       result = system(compileParam[sourceType].c_str());
       if( result != 0 )
       {
          error = true;
          result = 1;
-      }else{
-         runIt();
       }
-   }
-   
+   }   
    void runIt()
    {
+      if(error)return;
+      int ret;
       MYSQL_ROW row;
+      struct timeval begin, end; //for calculating time elapsed
       str="SELECT * FROM problems WHERE problemCode=\""+problemCode+"\" LIMIT 1";
       db->setQuery(str);
       db->useQuery();
@@ -118,23 +121,23 @@ public:
       sourceLimit.assign(row[4]);
       memoryLimit.assign(row[6]);
       db->freeResult();
-      
       string strtimeLimit="timeout "+timeLimit+"s ";
-      if(error) return;
       //start timer
-      result=system((strtimeLimit+runParam[sourceType]+" <../data/problems/TEST/input.in >/tmp/online_judge/output.out ").c_str());
+      gettimeofday(&begin, NULL);
+      ret=system((strtimeLimit+runParam[sourceType]+" <../data/problems/TEST/input.in >/tmp/online_judge/output.out ").c_str());
+      gettimeofday(&end, NULL);
       //end timer
+      result=WEXITSTATUS(ret);
+      timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
+      cout<<"timeElapsed: "<<timeElapsed<<endl;
       if(result!=0){
          error=true;
-         if(result==31744)//change it later,error code when tle my machine is weird
+         if(result==124)
             result=3;
          else
             result=2;
-      }else{
-         checkOutput();
       }
-   }
-   
+   }   
    void checkOutput()
    {
       if(error) return;
@@ -185,16 +188,14 @@ public:
 
 int main(int argc, char *argv[])
 {
-   freopen( "error.log", "w", stderr );
+   //freopen( "error.log", "w", stderr );
    if( argc < 2 )
    {
       cout << "Usage: ./jobcompiler jobid" << endl;
       return 1;
    }
-   
    JobCompiler jc( argv[1] );
    jc.doWork();
    cout << jc.getResult() << endl;
-   
    return 0;
 }

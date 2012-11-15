@@ -13,10 +13,6 @@ int main()
 	db.connect();
    	int num_row;  
 	MYSQL_ROW row;
-
-	ofstream log;
-	log.open("log.txt", ios::app );
-
    	while(true)
    	{
 
@@ -25,29 +21,28 @@ int main()
       	   if(!(row=db.getRow()))
            {
              printf("No submissions to be judged now\n");
-             sleep(2);
+             sleep(1);
            }
            else
            {
              //pass submission id to job_compiler
-             char *subId=row[0];
-	     char st[100];
-             log << "Judging submission id:" << subId << endl;
+             string subId;
+             subId.assign(row[0]);
+             char st[200];
+             cout<< "Judging submission id:" << subId << endl;
              system("g++ job_compiler.cpp `mysql_config --cflags --libs` -o jobCompiler"); // need to remove this later
-             sprintf(st,"./jobCompiler %s",subId);
+             sprintf(st,"./jobCompiler %s",subId.c_str());
              system(st);
              
-		 /*sprintf(st,"DELETE FROM jobQueue WHERE submissionId=%s",subId);
-      	 	  if(mysql_query(conn,st)!=0)
-       	     	error_handle(conn);
-       			  */
+                 db.simpleQuery(string("DELETE FROM jobQueue WHERE submissionId="+subId));
+               
        	       /*sprintf(st,"UPDATE submissions SET status=\"waiting\" WHERE submissionId=%s",subId);
         	 if(mysql_query(conn,st)!=0)
         	    error_handle(conn);
         	 */
           }
       db.freeResult();
-      break;
+      //break;
    }
    return 0;
 }
