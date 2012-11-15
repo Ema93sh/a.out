@@ -2,10 +2,9 @@
 
 #include <iostream>
 #include <string>
-#include <my_global.h>
-#include <mysql.h>
-#include "DBconnect.h"
 #include <map>
+#include "database.h"
+
 using namespace std;
 
 
@@ -14,11 +13,6 @@ using namespace std;
  *   for now assuming jobid is the filename of source program
  */
 
-inline void error_handle(MYSQL *conn){
-   printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
-   exit(1);
-}
-MYSQL *conn;
 class JobCompiler
 {
 private:
@@ -35,6 +29,7 @@ private:
    map<int,string> runParam;
    map<int,string> ext;
    int sourceType; // 1 - c , 2 - c++, 3 - python
+   Database *db;
 
 public:
    string stringBuilder(string path){
@@ -67,6 +62,10 @@ public:
       runParam[2]=workingDir+"./output";
       runParam[3]="python "+workingDir+jobId+".py";
       
+
+      db = new Database();
+      db->initialize();
+      db->connect();
    }
    
    void doWork()
@@ -76,17 +75,15 @@ public:
    
    void checkType()
    {
-      MYSQL_RES *result;
       MYSQL_ROW row;
       str="SELECT * FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
-      if(mysql_query(conn,str.c_str())!=0)
-         error_handle(conn);
-      result=mysql_store_result(conn);
-      row=mysql_fetch_row(result);
+      db->setQuery(str);
+      db->useQuery();
+      row= db->getRow();
       lang.assign(row[2]);
       problemCode.assign(row[1]);
       sourceType=srcType[lang];
-      mysql_free_result(result);
+      db->freeResult();
       //if it is an interpreted language call runIt
       //else call compileIt
       if(sourceType==1||sourceType==2)
@@ -112,17 +109,15 @@ public:
    
    void runIt()
    {
-      MYSQL_RES *qresult;
       MYSQL_ROW row;
       str="SELECT * FROM problems WHERE problemCode=\""+problemCode+"\" LIMIT 1";
-      if(mysql_query(conn,str.c_str())!=0)
-         error_handle(conn);
-      qresult=mysql_store_result(conn);
-      row=mysql_fetch_row(qresult);
+      db->setQuery(str);
+      db->useQuery();
+      row=db->getRow();
       timeLimit.assign(row[5]);
       sourceLimit.assign(row[4]);
       memoryLimit.assign(row[6]);
-      mysql_free_result(qresult);
+      db->freeResult();
       
       string strtimeLimit="timeout "+timeLimit+"s ";
       if(error) return;
@@ -186,6 +181,8 @@ public:
       return strResult;
    }
 };
+
+
 int main(int argc, char *argv[])
 {
    freopen( "error.log", "w", stderr );
@@ -194,24 +191,6 @@ int main(int argc, char *argv[])
       cout << "Usage: ./jobcompiler jobid" << endl;
       return 1;
    }
-   
-   
-   //connect to db   
-   conn=mysql_init(NULL);
-   //connection variable
-   if(conn == NULL){
-      error_handle(conn);
-   }
-   //connect to mysql
-   if(mysql_real_connect(conn, db_host, db_user, db_password, NULL, 0, NULL, 0) == NULL){
-      error_handle(conn);
-   }
-   //select database
-   if(mysql_select_db(conn,db_name)!=0){
-      error_handle(conn);
-   }
-   //connection established
-   
    
    JobCompiler jc( argv[1] );
    jc.doWork();
