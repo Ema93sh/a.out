@@ -77,6 +77,8 @@ class Database
 
 		int useQuery() // returns the number of fields/cols
 		{
+
+			if( mysql_query( conn, query.c_str() ) != 0 ) error_handle();
 			result = mysql_store_result(conn);
 			num_fields = mysql_num_fields(result);
 			return num_fields;

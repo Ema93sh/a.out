@@ -6,10 +6,8 @@
 #include "database.h"
 using namespace std;
 
-
 int main()
 {
-
 	Database db;
 	db.initialize();
 	db.connect();
@@ -38,7 +36,7 @@ int main()
              system("g++ job_compiler.cpp `mysql_config --cflags --libs` -o jobCompiler"); // need to remove this later
              sprintf(st,"./jobCompiler %s",subId);
              system(st);
-         
+             
 		 /*sprintf(st,"DELETE FROM jobQueue WHERE submissionId=%s",subId);
       	 	  if(mysql_query(conn,st)!=0)
        	     	error_handle(conn);
