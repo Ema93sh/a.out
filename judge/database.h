@@ -22,7 +22,7 @@ class Database
 	public:
 		Database( )
 		{
-			username = "username";
+			username = "root";
 			password = "password";
 			hostname = "localhost";
 			dbname = "online_judge";
@@ -32,6 +32,7 @@ class Database
 		void error_handle()
 		{
 			printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+			exit(0);
 		}
 		
 		void setLocalhost( string host )
@@ -86,10 +87,14 @@ class Database
 			return mysql_fetch_row(result);
 		}
 
-		~Database()
+		void freeResult()
 		{
 			if( result != NULL )
 			mysql_free_result(result);
+		}
+	
+		~Database()
+		{
 			mysql_close(conn);
 		}
 };
