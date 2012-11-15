@@ -22,53 +22,71 @@ MYSQL *conn;
 class JobCompiler
 {
 private:
+   string workingDir;
    string str,lang;
    string jobId;
    bool error; 
-   int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA
+   string timeLimit,sourceLimit,memoryLimit;
+   string problemCode;
+   int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA ,5 - AC
    string strResult; // converted result code to string
    map<string,int> srcType; // maps sourceType
    map<int,string> compileParam;//maps sourceType to compile parameters
    map<int,string> runParam;
+   map<int,string> ext;
    int sourceType; // 1 - c , 2 - c++, 3 - python
 
 public:
+   string stringBuilder(string path){
+      FILE *inp=fopen(path.c_str(),"r");
+      string ret="";
+      char c;
+      while((c=fgetc(inp))!=EOF){
+         if(!(c==' '||c=='\t'||c=='\n'))
+         ret+=c;
+      }
+      fclose(inp);
+      return ret;
+   }
    JobCompiler( string jid )
    {
+      workingDir="/tmp/online_judge/";
       srcType["C"]=1;
       srcType["CPP"]=2;
       srcType["Python"]=3;
       
-      
       error = false;
       jobId = jid;
       result = 0;
-      compileParam[1]="gcc -o output "+jobId+".c";
-      compileParam[2]="g++ "+jobId+".cpp -o output";
-      
-      runParam[1]="./output";
-      runParam[2]="./output";
-      runParam[3]="python "+jobId+".py";
+      ext[1]=".c";
+      ext[2]=".cpp";
+      ext[3]=".py";
+      compileParam[1]="gcc -o "+workingDir+"output "+workingDir+jobId+".c";
+      compileParam[2]="g++ -o "+workingDir+"output "+workingDir+jobId+".cpp";
+      runParam[1]=workingDir+"./output";
+      runParam[2]=workingDir+"./output";
+      runParam[3]="python "+workingDir+jobId+".py";
       
    }
    
    void doWork()
    {
       checkType();
-      checkWithInput();
    }
    
    void checkType()
    {
       MYSQL_RES *result;
       MYSQL_ROW row;
-      str="SELECT language FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
+      str="SELECT * FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
       if(mysql_query(conn,str.c_str())!=0)
          error_handle(conn);
       result=mysql_store_result(conn);
       row=mysql_fetch_row(result);
-      lang.assign(row[0]);
+      lang.assign(row[2]);
+      problemCode.assign(row[1]);
       sourceType=srcType[lang];
+      mysql_free_result(result);
       //if it is an interpreted language call runIt
       //else call compileIt
       if(sourceType==1||sourceType==2)
@@ -79,7 +97,9 @@ public:
    
    void compileIt()
    {
-      // need to check source code type
+      //copy file to workingDir and work there
+      //insert actual username here
+      system(("cp ../data/users/testuser/"+jobId+ext[sourceType]+" "+workingDir+jobId+ext[sourceType]).c_str());
       result = system(compileParam[sourceType].c_str());
       if( result != 0 )
       {
@@ -92,11 +112,22 @@ public:
    
    void runIt()
    {
-      string timeLimit="timeout 2.0s ";
+      MYSQL_RES *qresult;
+      MYSQL_ROW row;
+      str="SELECT * FROM problems WHERE problemCode=\""+problemCode+"\" LIMIT 1";
+      if(mysql_query(conn,str.c_str())!=0)
+         error_handle(conn);
+      qresult=mysql_store_result(conn);
+      row=mysql_fetch_row(qresult);
+      timeLimit.assign(row[5]);
+      sourceLimit.assign(row[4]);
+      memoryLimit.assign(row[6]);
+      mysql_free_result(qresult);
+      
+      string strtimeLimit="timeout "+timeLimit+"s ";
       if(error) return;
       //start timer
-      //pipe the input file
-      result=system((timeLimit+runParam[sourceType]+">output.txt ").c_str());
+      result=system((strtimeLimit+runParam[sourceType]+" <../data/problems/TEST/input.in >/tmp/online_judge/output.out ").c_str());
       //end timer
       if(result!=0){
          error=true;
@@ -104,12 +135,21 @@ public:
             result=3;
          else
             result=2;
+      }else{
+         checkOutput();
       }
    }
    
-   void checkWithInput()
+   void checkOutput()
    {
       if(error) return;
+      string path="../data/problems/"+problemCode+"/output.out";
+      string judgeOp=stringBuilder(path);
+      path=workingDir+"output.out";
+      string userOP=stringBuilder(path);
+      if(judgeOp.compare(userOP)!=0)result=4;
+      else result=5;
+      
    }
    
    int getResultCode()
@@ -132,6 +172,12 @@ public:
             break;
          case 3:
             strResult="TLE";
+            break;
+         case 4:
+            strResult = "WA";
+            break;
+         case 5:
+            strResult="AC";
             break;
          default:
             strResult = "Unkown Result";
@@ -165,7 +211,6 @@ int main(int argc, char *argv[])
       error_handle(conn);
    }
    //connection established
-   
    
    
    JobCompiler jc( argv[1] );
