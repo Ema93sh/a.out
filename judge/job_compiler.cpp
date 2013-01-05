@@ -153,6 +153,14 @@ public:
       if(judgeOp.compare(userOP)!=0)result=4;
       else result=5;
    }
+
+   void updateResult()
+   {
+	   string result = getResult();
+	   string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +jobId;
+	   cout << "Update: " << query <<  endl;
+	   db->simpleQuery(query);
+   }
    
    int getResultCode()
    {
@@ -164,25 +172,25 @@ public:
       switch( result )
       {
          case 0:
-            strResult =  "Successful";
+            strResult =  "ERR";
             break;
-            
+
          case 1:
-            strResult = "CME";
+            strResult = "CTE";
          case 2:
-            strResult = "RE";
+            strResult = "RTE";
             break;
          case 3:
             strResult="TLE";
             break;
          case 4:
-            strResult = "WA";
+            strResult = "WRA";
             break;
          case 5:
-            strResult="AC";
+            strResult="ACC";
             break;
          default:
-            strResult = "Unkown Result";
+            strResult = "ERR";
       }
       
       return strResult;
