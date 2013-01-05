@@ -53,10 +53,11 @@ class Submission( models.Model ):
 	STATUS_CODE  = (
 			("ERR", "Internal Error"),
 			("WAI", "Waiting"),
-			("SUC", "Success"),
+			("ACC", "Accpeted"),
 			("TLE", "Time Limit Exceeded"),
 			("RTE", "Runtime Error"),
 			("CTE", "Compile Time Error"),
+			("WRA", "Wrong Answer"),
 			)
 	date = models.DateTimeField( 'Date added', auto_now_add = True )
 	user = models.ForeignKey( User )

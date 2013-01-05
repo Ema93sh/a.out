@@ -17,8 +17,6 @@ class JobCompiler
 {
 private:
    double timeElapsed;
-   string workingDir;
-   string str,lang;
    string jobId;
    bool error; 
    string timeLimit,sourceLimit,memoryLimit;
@@ -43,11 +41,13 @@ public:
       fclose(inp);
       return ret;
    }
+
    JobCompiler( string jid )
    {
-      workingDir="/tmp/online_judge/";
-      path = "/Learning/Projects/GIT/a.out/data/";
+      path = "/Learning/Projects/GIT/a.out/";
       jobId = jid;
+      error = false;
+      result = 0;
       db = new Database();
       db->initialize();
       db->connect();
@@ -59,22 +59,22 @@ public:
       compileIt();
       runIt();
       checkOutput();
+      updateResult();
    }
    
    void checkType()
    {
+      string str;
       MYSQL_ROW row;
-      str="SELECT language_id, problem_id, userCode FROM submissions WHERE id= \""+jobId+"\" LIMIT 1";
+      str="SELECT language_id, problem_id, userCode FROM submissions WHERE id= "+jobId+" LIMIT 1";
       db->setQuery(str);
       db->useQuery();
       row= db->getRow();
-      cout << "str:" << str << endl;
       string langid;
       langid.assign( row[0] );
       string probid;
       probid.assign( row[1] );
       sourcePath.assign( row[2] );
-      cout << "OUT" << endl;
       db->freeResult();
       
       str ="SELECT inputFile, outputFile, sourceLimit, timeLimit, memoryLimit FROM problems WHERE id="+probid+" LIMIT 1";
@@ -103,13 +103,14 @@ public:
    
    void compileIt()
    {
-     sourcePath = path + sourcePath;
+     sourcePath = path + "data/" + sourcePath;
      string final = compileParam + " " + sourcePath;
      cout << "compiling: " << final << endl;
      result = system(final.c_str());
 
       if( result != 0 )
       {
+	 cout << "Error While compiling" << endl;
          error = true;
          result = 1;
       }
@@ -121,8 +122,9 @@ public:
       struct timeval begin, end; //for calculating time elapsed
       string strtimeLimit="timeout "+timeLimit+"s ";
       //start timer
-      sampleInputPath = path + sampleInputPath;
-      string final = strtimeLimit + "./a.out " + "< " + sampleInputPath + " > " + "output"; 
+      sampleInputPath = path + "data/" + sampleInputPath;
+      string final = string("./a.out ") + "< " + sampleInputPath + " > " + "output"; 
+      cout << "running: " << final << endl;
       gettimeofday(&begin, NULL);
       ret=system(final.c_str());
       gettimeofday(&end, NULL);
@@ -142,9 +144,11 @@ public:
    {
       if(error) return;
 
-      sampleOutputPath = path + sampleOutputPath;
+      sampleOutputPath = path + "data/" + sampleOutputPath;
+      cout << "Sample Output:" << sampleOutputPath << endl; 
       string judgeOp=stringBuilder(sampleOutputPath);
-      string temp = path + "../output";
+      string temp = path + "/judge/output";
+      cout << "Current Output:" << temp << endl;
       string userOP=stringBuilder(temp);
       if(judgeOp.compare(userOP)!=0)result=4;
       else result=5;
