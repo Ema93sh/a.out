@@ -22,14 +22,13 @@ private:
    string jobId;
    bool error; 
    string timeLimit,sourceLimit,memoryLimit;
-   string problemCode;
+   string sampleInputPath;
+   string sampleOutputPath;
+   string sourcePath;
+   string path;
+   string compileParam;
    int result; // 0 - success, 1 - CME , 2 - RE, 3 - TLE, 4 - WA ,5 - AC
    string strResult; // converted result code to string
-   map<string,int> srcType; // maps sourceType
-   map<int,string> compileParam;//maps sourceType to compile parameters
-   map<int,string> runParam;
-   map<int,string> ext;
-   int sourceType; // 1 - c , 2 - c++, 3 - python
    Database *db;
 
 public:
@@ -47,25 +46,8 @@ public:
    JobCompiler( string jid )
    {
       workingDir="/tmp/online_judge/";
-      srcType["C"]=1;
-      srcType["CPP"]=2;
-      srcType["Python"]=3;
-      
-      error = false;
+      path = "/Learning/Projects/GIT/a.out/data/";
       jobId = jid;
-      result = 0;
-      timeElapsed=0.0;
-      
-      ext[1]=".c";
-      ext[2]=".cpp";
-      ext[3]=".py";
-      compileParam[1]="gcc -o "+workingDir+"output "+workingDir+jobId+".c";
-      compileParam[2]="g++ -o "+workingDir+"output "+workingDir+jobId+".cpp";
-      runParam[1]=workingDir+"./output";
-      runParam[2]=workingDir+"./output";
-      runParam[3]="python "+workingDir+jobId+".py";
-      
-
       db = new Database();
       db->initialize();
       db->connect();
@@ -82,25 +64,50 @@ public:
    void checkType()
    {
       MYSQL_ROW row;
-      str="SELECT * FROM submissions WHERE submissionId=\""+jobId+"\" LIMIT 1";
+      str="SELECT language_id, problem_id, userCode FROM submissions WHERE id= \""+jobId+"\" LIMIT 1";
       db->setQuery(str);
       db->useQuery();
       row= db->getRow();
-      lang.assign(row[2]);
-      problemCode.assign(row[1]);
-      sourceType=srcType[lang];
+      cout << "str:" << str << endl;
+      string langid;
+      langid.assign( row[0] );
+      string probid;
+      probid.assign( row[1] );
+      sourcePath.assign( row[2] );
+      cout << "OUT" << endl;
       db->freeResult();
+      
+      str ="SELECT inputFile, outputFile, sourceLimit, timeLimit, memoryLimit FROM problems WHERE id="+probid+" LIMIT 1";
+      db->setQuery(str);
+      db->useQuery();
+      row = db->getRow();
+
+      sampleInputPath = row[0];
+      sampleOutputPath = row[1];
+      sourceLimit = row[2];
+      timeLimit = row[3];
+      memoryLimit = row[4];
+      db->freeResult();
+
+      str = "SELECT compileParam FROM language WHERE id="+langid+" LIMIT 1";
+      db->setQuery(str);
+      db->useQuery();
+      row = db->getRow();
+      
+      compileParam = row[0];
+      db->freeResult();
+
       //if it is an interpreted language call runIt
       //else call compileIt
    }
    
    void compileIt()
    {
-      system(("cp ../data/users/testuser/"+jobId+ext[sourceType]+" "+workingDir+jobId+ext[sourceType]).c_str());
-      if(!(sourceType==1||sourceType==2))return; // if not compiled languages
-      //copy file to workingDir and work there
-      //insert actual username here
-      result = system(compileParam[sourceType].c_str());
+     sourcePath = path + sourcePath;
+     string final = compileParam + " " + sourcePath;
+     cout << "compiling: " << final << endl;
+     result = system(final.c_str());
+
       if( result != 0 )
       {
          error = true;
@@ -111,20 +118,13 @@ public:
    {
       if(error)return;
       int ret;
-      MYSQL_ROW row;
       struct timeval begin, end; //for calculating time elapsed
-      str="SELECT * FROM problems WHERE problemCode=\""+problemCode+"\" LIMIT 1";
-      db->setQuery(str);
-      db->useQuery();
-      row=db->getRow();
-      timeLimit.assign(row[5]);
-      sourceLimit.assign(row[4]);
-      memoryLimit.assign(row[6]);
-      db->freeResult();
       string strtimeLimit="timeout "+timeLimit+"s ";
       //start timer
+      sampleInputPath = path + sampleInputPath;
+      string final = strtimeLimit + "./a.out " + "< " + sampleInputPath + " > " + "output"; 
       gettimeofday(&begin, NULL);
-      ret=system((strtimeLimit+runParam[sourceType]+" <../data/problems/TEST/input.in >/tmp/online_judge/output.out ").c_str());
+      ret=system(final.c_str());
       gettimeofday(&end, NULL);
       //end timer
       result=WEXITSTATUS(ret);
@@ -141,13 +141,13 @@ public:
    void checkOutput()
    {
       if(error) return;
-      string path="../data/problems/"+problemCode+"/output.out";
-      string judgeOp=stringBuilder(path);
-      path=workingDir+"output.out";
-      string userOP=stringBuilder(path);
+
+      sampleOutputPath = path + sampleOutputPath;
+      string judgeOp=stringBuilder(sampleOutputPath);
+      string temp = path + "../output";
+      string userOP=stringBuilder(temp);
       if(judgeOp.compare(userOP)!=0)result=4;
       else result=5;
-      
    }
    
    int getResultCode()
