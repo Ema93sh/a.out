@@ -53,11 +53,14 @@ MEDIA_ROOT = '/Learning/Projects/GIT/a.out/data/'
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = 'http://localhost/data/'
 
+
+LOGIN_REDIRECT_URL = "/"
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/Learning/Projects/GIT/a.out/frontend/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -68,6 +71,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    "/Learning/Projects/GIT/a.out/frontend/template/static",
 )
 
 # List of finder classes that know how to find static files in
@@ -103,11 +107,22 @@ ROOT_URLCONF = 'online_judge.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'online_judge.wsgi.application'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+		"django.contrib.auth.context_processors.auth",
+		"django.core.context_processors.debug",
+		"django.core.context_processors.i18n",
+		"django.core.context_processors.media",
+		"django.core.context_processors.static",
+		"django.core.context_processors.tz",
+		"django.core.context_processors.request",
+		"django.contrib.messages.context_processors.messages")
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-)
+    "/Learning/Projects/GIT/a.out/frontend/template",
+    )
 
 INSTALLED_APPS = (
     'django.contrib.auth',

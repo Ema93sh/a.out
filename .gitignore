@@ -13,4 +13,5 @@
 *.a
 
 #temp files
+.DS_Store
 *~

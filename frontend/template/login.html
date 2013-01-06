@@ -1,0 +1,35 @@
+<html>
+	<head>
+		 {% load staticfiles %}
+		 <link type="text/css" rel="stylesheet" href="{% static "style.css" %}" media="screen">
+		 <link href="http://fonts.googleapis.com/css?family=Dancing+Script|Oswald" rel="stylesheet" type="text/css" />
+		 <title> Project a.out - Login </title>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="menu-wrapper">
+	 		</div>
+			<div id="logo" class="container">
+				<h1><a href="#">A.out</a></h1>
+				<p>Amrita Online Judge</p>
+			</div>
+			<div id="login" class="container">
+			<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+				{% csrf_token %}
+				{% if forms.errors %}
+			                <p> Your username and password did not match. Please try again.</p>
+				 {% endif %}
+				 {{ form.username.label_tag }}
+				 {{ form.username }}
+				 {{ form.password.label_tag }}
+				 {{ form.password }}
+			  	<input type="submit" class="btnLogin" value="login" tabindex="4">
+			   	<input type="hidden" name="next" value="{{ next }}" >
+			 </form>
+	 		</div>
+		</div>
+		<div id="footer">
+			<p>Copyright 2013. All rights reserved.</p>
+		</div>
+	</body>
+</html>
