@@ -6,9 +6,12 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'online_judge.views.home', name='home'),
-    url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+    url(r'^account/logout$', 'online_judge.views.logoutView'),
+    url(r'^account/login$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+    url(r'^practice/', 'judge.views.practice'),
+    url(r'^problem/(?P<problem_id>\d+)/$', 'judge.views.problem'),
+    url(r'^problem/(?P<problem_id>\d+)/submit/$', 'judge.views.submit'),
     # url(r'^online_judge/', include('online_judge.foo.urls')),
-    url(r'^logout$', 'online_judge.views.logoutView', name='login'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

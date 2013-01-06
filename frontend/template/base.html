@@ -8,17 +8,23 @@
 	<body>
 		<div id="wrapper">
 			<div id="menu-wrapper">
-				<div id="menu" class="container">
-					<ul>
-						{% block menu_buttons %} {% endblock %}
-						{% if request.user.is_authenticated %}
-						<li><a href="logout">Logout</a></li>
-						{% else %}
-						<li><a href="login">Login</a></li>
-						{% endif %}
-					</ul>
-				</div>
-	 		</div>
+			<nav>
+			<ul>
+					{% block menu_buttons %} {% endblock %}
+					{% if request.user.is_authenticated %}
+					<li><a href="/account/profile">{{ request.user }}</a>
+					    <ul>
+						    <li><a href="/account/profile">view profile</a></li>
+						    <li><a href="/account/submissions">Submissions</a></li>
+						    <li><a href="/account/logout?next={{ request.path }}">Logout</a></li>
+						</ul>	    
+					</li>
+					{% else %}
+					<li><a href="/account/login?next={{request.path}}">Login</a></li>
+					{% endif %}
+				</ul>
+				</nav>
+			</div>
 			<div id="logo" class="container">
 				<h1><a href="#">A.out</a></h1>
 				<p>Amrita Online Judge</p>
