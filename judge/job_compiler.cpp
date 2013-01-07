@@ -177,7 +177,9 @@ public:
 
          case 1:
             strResult = "CTE";
-         case 2:
+	    break;
+
+	 case 2:
             strResult = "RTE";
             break;
          case 3:

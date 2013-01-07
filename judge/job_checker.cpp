@@ -34,12 +34,6 @@ int main()
              sprintf(st,"./jobCompiler %s",subId.c_str());
              system(st);
              db.simpleQuery(string("DELETE FROM jobQueue WHERE submission_id="+subId));
-               
-       	       /*sprintf(st,"UPDATE submissions SET status=\"waiting\" WHERE submissionId=%s",subId);
-        	 if(mysql_query(conn,st)!=0)
-        	    error_handle(conn);
-        	 */
-           break;
 	   }
 
       db.freeResult();

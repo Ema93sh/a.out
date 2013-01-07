@@ -24,7 +24,7 @@ class submissionListView( ListView ):
 	model = Submission
 	template_name = 'judge/submissions.html'
 	context_object_name = 'submissions'
-	
+	paginate_by = 10
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
 		context = super( submissionListView, self).get_context_data(**kwargs)
@@ -39,7 +39,6 @@ class problemListView( ListView ):
 	template_name = 'judge/practice.html'
 	context_object_name = 'problems'
 	queryset = Problem.objects.filter( isVisible = True )
-	
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
 		context = super( problemListView, self).get_context_data(**kwargs)

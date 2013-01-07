@@ -1,9 +1,12 @@
-<table class="activities">
+<table id="hor-minimalist-b">
+	<thead>
 	<tr>
 		<th>Code</th>
 		<th>Username</th>
 		<th>Result</th>
 	</tr>
+	</thead>
+	<tbody>
 	{% for submission in recent_activity %}
 		<tr>
 			<td><a href="/problem/{{ submission.problem.id }}/">{{ submission.problem.code }}</a></td>
@@ -11,5 +14,6 @@
 			<td>{{ submission.status }}</td>
 		</tr>
 	{% endfor %}
+	</tbody>
 </table>
 

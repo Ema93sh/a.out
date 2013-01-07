@@ -6,11 +6,40 @@
 <li><a href="/contest">Contest</a></li>
 <li><a href="/practice">Practice</a></li>
 {% endblock %}
+{% block head %}
+<script type="text/javascript" language="javascript" src="http://datatables.net/release-datatables/media/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="http://datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
+<script>
+	$(document).ready(function(){
+		// Initalize DataTables on <table> tag with id="example"
+			$('#example').dataTable();  
+		});
+</script>
+<link type="text/css" rel="stylesheet" href="http://www.datatables.net/release-datatables/media/css/demo_table.css">
+{% endblock %}
+
 
 {% block content %}
 <h2 class="title"><a href="{{ request.path }}">Submission - {{ request.user.username }}</a></h2>
 <div id="entry">
-	{% include 'judge/base_submission.html' %}
+	<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+         <thead>
+		 <tr>
+			 <th>Code</th>
+			 <th>Title</th>
+			 <th>Result</th>
+		 </tr>
+	 </thead>
+	 <tbody>
+		 {% for submission in submissions %}
+		 <tr class="gradeA">
+			 <td><a href="/problem/{{ submission.problem.id }}/">{{ submission.problem.code }}</a></td>
+			 <td>{{ submission.problem.title }}</td>
+			 <td>{{ submission.status }}</td>
+		 </tr>
+		{% endfor %}
+	<tbody>
+	</table>
 </div>
 {% endblock %}
 

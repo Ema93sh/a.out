@@ -55,6 +55,7 @@ MEDIA_URL = 'http://localhost/data/'
 
 
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/account/login"
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
