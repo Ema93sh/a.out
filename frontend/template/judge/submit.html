@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %} Practice {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/Contest">Contest</a></li>
+<li class="current_page_item"><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="{{ request.path }}">Submit - {{ problem.title }}</a></h2>
+<div id="entry">
+	<form method="post" action="/problem/{{ problem.id }}/submit/"  enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		{{ form.userCode.errors }}
+
+		<input type="submit" value="Submit"/>
+	</form>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}

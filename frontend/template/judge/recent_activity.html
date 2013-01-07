@@ -1,0 +1,15 @@
+<table class="activities">
+	<tr>
+		<th>Code</th>
+		<th>Username</th>
+		<th>Result</th>
+	</tr>
+	{% for submission in recent_activity %}
+		<tr>
+			<td><a href="/problem/{{ submission.problem.id }}/">{{ submission.problem.code }}</a></td>
+			<td><a href="/account/{{ submission.user.id }}/">{{ submission.user }}</a></td>
+			<td>{{ submission.status }}</td>
+		</tr>
+	{% endfor %}
+</table>
+

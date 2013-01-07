@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %} {{ required_user.username }} {% endblock %}
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="title">Profile Page - <a href="#">{{ required_user.username }}</a></h2>
+<div id="entry">
+	<table>
+		<tr>
+			<td> Username </td>
+			<td>{{ required_user.username }}</td>
+		</tr>
+		<tr>
+			<td> First Name </td>
+			<td>{{ required_user.first_name }} </td>
+		</tr>
+		<tr>
+			<td> Last Name </td>
+			<td>{{ required_user.last_name }} </td>
+		</tr>
+		<tr>
+			<td> Email: </td>
+			<td>{{ required_user.email }} </td>
+
+		</tr>
+	</table>
+</div>
+{% endblock %}
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

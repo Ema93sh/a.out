@@ -1,0 +1,14 @@
+<table>
+	<tr>
+		<th>Code</th>
+		<th>Title</th>
+		<th>Result</th>
+	</tr>
+	{% for submission in submissions %}
+	<tr>
+		<td><a href="/problem/{{ submission.problem.id }}/">{{ submission.problem.code }}</a></td>
+		<td>{{ submission.problem.title }}</td>
+		<td>{{ submission.status }}</td>
+	</tr>
+	{% endfor %}
+</table>

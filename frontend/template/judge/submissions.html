@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} My Submissions {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="{{ request.path }}">Submission - {{ request.user.username }}</a></h2>
+<div id="entry">
+	{% include 'judge/base_submission.html' %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

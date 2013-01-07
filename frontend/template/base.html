@@ -14,8 +14,8 @@
 					{% if request.user.is_authenticated %}
 					<li><a href="/account/profile">{{ request.user }}</a>
 					    <ul>
-						    <li><a href="/account/profile">view profile</a></li>
-						    <li><a href="/account/submissions">Submissions</a></li>
+						    <li><a href="/account/{{ request.user.id }}">view profile</a></li>
+						    <li><a href="/account/{{ request.user.id }}/submissions">Submissions</a></li>
 						    <li><a href="/account/logout?next={{ request.path }}">Logout</a></li>
 						</ul>	    
 					</li>

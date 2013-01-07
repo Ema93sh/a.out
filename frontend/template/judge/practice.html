@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %} Practice {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/contest">Contest</a></li>
+<li class="current_page_item"><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="/practice">Practice</a></h2>
+<div id="entry">
+	<table class = "problems">
+		<tr>
+			<th> Code </th>
+			<th> Title </th>
+			<th> Submissions </th>
+		</tr>
+		{% for problem in problems %}
+		<tr>
+			<td>{{ problem.code }} </td>
+			<td><a href="/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
+			<td>{{  problem.submission_set.count }} </td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

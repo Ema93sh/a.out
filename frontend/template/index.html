@@ -16,5 +16,11 @@
 {% endblock %}
 
 {% block sidebar %}
+{% if user.is_authenticated and submissions.count > 0%}
+<h2> My Submission </h2>
+{% include 'judge/base_submission.html' %}
+{% endif %}
 <h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+
 {% endblock %}
