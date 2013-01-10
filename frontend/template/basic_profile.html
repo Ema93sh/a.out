@@ -1,33 +1,40 @@
 {% extends "base.html" %}
-{% block title %} {{ required_user.username }} {% endblock %}
+{% block title %} {{ user.username }} {% endblock %}
 {% block menu_buttons %}
 <li><a href="/">Home</a></li>
 <li><a href="/contest">Contest</a></li>
 <li><a href="/practice">Practice</a></li>
 {% endblock %}
 
+{% block head %}
+<link type="text/css" rel="stylesheet" href="/static/form-style.css">
+{% endblock %}
+
 {% block content %}
 <h2 class="title">Profile Page - <a href="#">{{ required_user.username }}</a></h2>
 <div id="entry">
-	<table>
-		<tr>
-			<td> Username </td>
-			<td>{{ required_user.username }}</td>
-		</tr>
-		<tr>
-			<td> First Name </td>
-			<td>{{ required_user.first_name }} </td>
-		</tr>
-		<tr>
-			<td> Last Name </td>
-			<td>{{ required_user.last_name }} </td>
-		</tr>
-		<tr>
-			<td> Email: </td>
-			<td>{{ required_user.email }} </td>
+	<div id="profileView">
+	{% csrf_token %}
+	<div class="field">
+		<p class="label"> Username: </p>
+		<p class="value"> {{ required_user.username }} </p>
+	</div>
 
-		</tr>
-	</table>
+	<div class="field">
+		<p class="label"> First Name: </p>
+		<p class="value"> {{ required_user.first_name }} </p>
+	</div>
+
+	<div class="field">
+		<p class="label"> Last Name: </p>
+		<p class="value"> {{ required_user.last_name }} </p>
+	</div>
+
+	<div class="field">
+		<p class="label"> Email: </p>
+		<p class="value"> {{ required_user.email }} </p>
+	</div>
+	</div>
 </div>
 {% endblock %}
 {% block sidebar %}

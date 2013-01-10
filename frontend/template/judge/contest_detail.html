@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} Contest - {{ contest.name }} {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li class="current_page_item"><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block head %}
+<link type="text/css" rel="stylesheet" href="http://www.datatables.net/release-datatables/media/css/demo_table.css">
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="{{ request.path }}">{{ contest.name }}</a></h2>
+<div id="entry">
+	<h3>Problems</h3>
+	<br>
+	<br>
+	<table class ="display">
+		<thead>
+			<th>Code</th>
+			<th>Title</th>
+			<th>Submissions</th>
+		</thead>
+		<tbody>
+			{% for problem in contest.problems.all %}
+			<tr class="gradeA">
+				<td>{{ problem.code }}</td>
+				<td><a href="/contest/{{contest.id}}/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
+				<td>{{ problem.submission_set.count }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Best Solutions </h2>
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

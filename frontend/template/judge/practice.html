@@ -28,6 +28,7 @@
 			<th> Code </th>
 			<th> Title </th>
 			<th> Submissions </th>
+			<th> Success </th>
 		</thead>
 		<tbody>
 		{% for problem in problems %}
@@ -35,6 +36,7 @@
 			<td>{{ problem.code }} </td>
 			<td><a href="/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
 			<td>{{  problem.submission_set.count }} </td>
+			<td>{{ problem.success }} </td>
 		</tr>
 		{% endfor %}
 	</tbody>

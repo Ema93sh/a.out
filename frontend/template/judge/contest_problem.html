@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} Contest - {{ contest.name }} - {{ problem.title }} {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li class="current_page_item"><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="{{ request.path }}">{{ contest.name }} - {{ problem.title }}</a></h2>
+<div id="entry">
+	<p> {{ problem.description }} </p>
+	<a href="submit">SUBMIT</a>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Best Solutions </h2>
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

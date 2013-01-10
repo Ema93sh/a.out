@@ -6,32 +6,38 @@
 <li><a href="/practice">Practice</a></li>
 {% endblock %}
 
+{% block head %}
+<link type="text/css" rel="stylesheet" href="/static/form-style.css">
+{% endblock %}
+
 {% block content %}
 <h2 class="title">Profile Page - <a href="#">{{ user.username }}</a></h2>
 <div id="entry">
-	<form method="post" action="{{ request.path }}">
+	<form method="post" action="{{ request.path }}" id="profileForm">
 	{% csrf_token %}
-	<table>
-		<tr>
-			<td> Username </td>
-			<td>{{ user.username }}</td>
-		</tr>
-		<tr>
-			<td> First Name </td>
-			<td><input type="text" name="first_name" value="{{ user.first_name }}"></td>
-		</tr>
-		<tr>
-			<td> Last Name </td>
-			<td><input type="text" name="last_name" value="{{ user.last_name }}"> </td>
-		</tr>
-		<tr>
-			<td> Email: </td>
-			<td><input type="text" name="email" value="{{ user.email }}"> </td>
-		</tr>
-		<tr>
-			<td><input type="submit" value="Save"></td>
-		</tr>
-	</table>
+	<div class="field">
+		<label for="username">Username:</label>
+		<input type="text" id="username" disabled="true" value="{{ user.username }}">
+		<p class="hint"> Cannot change username</p>
+	</div>
+	<div class="field">
+		<label for="first_name">First Name:</label>
+		<input type="text" name="first_name" value="{{ user.first_name }}">
+		<p class="hint"> Enter your first name</p>
+	</div>	
+	<div class="field">
+		<label for="last_name">Last Name:</label>
+		<input type="text" name="last_name" value="{{ user.last_name }}">
+		<p class="hint"> Enter your last name</p>
+	</div>
+
+	<div class="field">
+		<label for="email">Email:</label>
+		<input type="email" name="email" value="{{ user.email }}">
+		<p class="hint"> Enter your email address</p>
+	</div>
+	<input type="submit" value="Save" class="button"></td>
+	</form>
 </div>
 {% endblock %}
 {% block sidebar %}

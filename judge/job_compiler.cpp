@@ -67,6 +67,7 @@ public:
       string str;
       MYSQL_ROW row;
       str="SELECT language_id, problem_id, userCode FROM submissions WHERE id= "+jobId+" LIMIT 1";
+      cout << str << endl;
       db->setQuery(str);
       db->useQuery();
       row= db->getRow();
@@ -76,8 +77,9 @@ public:
       probid.assign( row[1] );
       sourcePath.assign( row[2] );
       db->freeResult();
-      
+
       str ="SELECT inputFile, outputFile, sourceLimit, timeLimit, memoryLimit FROM problems WHERE id="+probid+" LIMIT 1";
+      cout << str << endl;
       db->setQuery(str);
       db->useQuery();
       row = db->getRow();
@@ -90,6 +92,7 @@ public:
       db->freeResult();
 
       str = "SELECT compileParam FROM language WHERE id="+langid+" LIMIT 1";
+      cout << str << endl;
       db->setQuery(str);
       db->useQuery();
       row = db->getRow();
@@ -147,7 +150,7 @@ public:
       sampleOutputPath = path + "data/" + sampleOutputPath;
       cout << "Sample Output:" << sampleOutputPath << endl; 
       string judgeOp=stringBuilder(sampleOutputPath);
-      string temp = path + "/judge/output";
+      string temp = path + "judge/output";
       cout << "Current Output:" << temp << endl;
       string userOP=stringBuilder(temp);
       if(judgeOp.compare(userOP)!=0)result=4;
