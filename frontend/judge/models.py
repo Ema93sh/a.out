@@ -54,6 +54,14 @@ class Problem( models.Model ):
 	class Meta:
 		db_table = 'problems'
 
+class Comment( models.Model ):
+	author = models.ForeignKey( User )
+	date = models.DateTimeField(auto_now_add = True)
+	data = models.TextField()
+	#replies = models.ManyToManyField( Comment )
+	approved = models.BooleanField(default = True)
+	problem = models.ForeignKey( Problem )
+
 class Contest( models.Model ):
 	def __unicode__(self):
 		return self.name
@@ -63,7 +71,7 @@ class Contest( models.Model ):
 	problems = models.ManyToManyField( Problem )
 	startTime = models.DateTimeField()
 	endTime = models.DateTimeField()
-	admin = models.ForeignKey( User, related_name = "+") 
+	admin = models.ForeignKey( User, related_name = "admin+") 
 	users = models.ManyToManyField( User )
 	penalty_submission = models.BooleanField( 'Penalty for Wrong submission' )
 	
@@ -79,11 +87,14 @@ class Contest( models.Model ):
 		db_table = 'contest'
 		ordering = ['-startTime']
 
-class Score( models.Model ):
+class Ranking( models.Model ):
 	contest = models.ForeignKey( Contest )
 	user = models.ForeignKey( User )
 	score = models.IntegerField(default=0)
 	total_time_elapsed = models.TimeField()
+	class Meta:
+		db_table = 'score'
+		ordering = ['-score']
 
 def submission_file_name(instance, filename):
 	    return '/'.join(['submissions', instance.user.username, instance.problem.code, filename ])
@@ -112,8 +123,6 @@ class Submission( models.Model ):
 	contest = models.ForeignKey( Contest , null = True)
 	class Meta:
 		db_table = 'submissions'
-
-
 
 class JobQueue( models.Model ):
 	def __unicode__(self):

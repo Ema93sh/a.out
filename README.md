@@ -13,6 +13,7 @@ Todo:
 	- is visible in Practice // done using isVisible in problems model
 	- is solution visible // done using solutionVisible 
 	- solution or submisison view // done by download link
+	- comment for each problem
 -Author
 	- add problem
 	- view problems submitted
@@ -27,5 +28,6 @@ Todo:
 	-Update timeElapse, mem
 	-Support for interpreted languages
 	-Testing
+	-Calculate rank in case of contest
 
 by vinith, Ema93sh

@@ -1,4 +1,4 @@
-from judge.models import Contest, Problem, Language, Submission, JobQueue
+from judge.models import Contest, Problem, Language, Submission, JobQueue, Comment
 from django.contrib import admin
 
 
@@ -24,3 +24,4 @@ admin.site.register( Problem, ProblemAdmin )
 admin.site.register( Submission, SubmissionAdmin )
 admin.site.register( JobQueue )
 admin.site.register( Contest, ContestAdmin )
+admin.site.register( Comment )

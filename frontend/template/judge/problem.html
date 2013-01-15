@@ -12,8 +12,39 @@
 <div id="entry">
 	<p> {{ problem.description }} </p>
 	<a href="/problem/{{ problem.id }}/submit">SUBMIT</a>
-</div>
+</div> 
 {% endblock %}
+
+{% block comments %}
+
+{% if problem.comment_set %}
+
+<h3> Comments: </h3>
+{% for comment in problem.comment_set.all %}
+<div class="comments">
+	<div class="author">
+		{{ comment.author }}
+	</div>
+	<div class="data">
+		{{ comment.data }}
+	</div>
+</div>			
+{% endfor %}
+{% endif %}
+{% if request.user.is_authenticated %}
+Add Comment:
+<form method="post" action="/problem/{{ problem.id }}/comment/add">
+	{% csrf_token %}
+	<textarea rows=7 name="comment">
+	</textarea>
+	<br>
+	<input type="hidden" name="next" value="{{ request.path }}" >
+	<input type="submit" value="Add">
+
+</form>
+{% endif %}
+{% endblock %}
+
 
 {% block sidebar %}
 <h2> Best Solutions </h2>

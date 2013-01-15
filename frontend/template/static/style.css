@@ -231,7 +231,7 @@ nav
 {
 	margin: 0px auto;
 	text-align: center;
-	background:#40745E;
+	background: rgba( 64, 116, 94, 0.4);
 	padding: 0px;
 	height:53px;
 }
@@ -246,7 +246,7 @@ nav ul li:hover > ul
 }
 
 nav ul {
-	background: #40745E; 
+	background: rgba( 64, 116, 94, 0); 
 	padding: 0px;
 	list-style: none;
 	position: relative;
@@ -288,7 +288,7 @@ nav ul li a {
 
 
 nav ul ul {
-	background: #40745E;
+	background: rgba( 64, 116, 94, 1);
 	border-radius: 0px; 
 	padding: 0;
 	position: absolute;
@@ -319,7 +319,7 @@ nav .current_page_item a
 
 #menu-wrapper {
 	height: 53px;
-	background: #40745E;
+	background: rgba( 64, 116, 94, 1);
 }
 
 #menu {
@@ -449,13 +449,36 @@ nav .current_page_item a
 .comments {
 	display: block;
 	float: left;
-	width: 88px;
-	height: 25px;
-	padding: 2px 0px 0px 0px;
+	width: 100%;
+	height: 100px;
+	padding: 2px 2px 2px 2px;
 	background: url(images/img08.jpg) no-repeat left top;
-	text-align: center;
-	color: #FFFFFF;
+	border: 1px solid black;
+	margin-top: 10px;
 }
+
+.comments .author
+{
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin: 2px;
+	padding: 2px;
+	font-size: 20px;
+	color: black;
+}
+
+.comments .data
+{
+	width: 100%;
+	height: 100%;
+	padding: 10px 25px;
+	font-size: 25px;
+	font-size: 12px;
+	color: black;
+}
+
+
 
 /* Sidebar */
 

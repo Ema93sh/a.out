@@ -15,11 +15,14 @@ urlpatterns = patterns('',
     url(r'^problem/(?P<pk>\d+)/$',  problemDetailView.as_view()),
     url(r'^problem/(?P<problem_id>\d+)/submit/$', 'judge.views.submit'),
     url(r'^submission/(?P<submission_id>\d+)/$', 'judge.views.submission'),
-
+    url(r'^problem/(?P<problem_id>\d+)/comment/add$', 'judge.views.addComment'),
     url(r'^contest/$', contestListView.as_view() ),
     url(r'^contest/(?P<pk>\d+)/$', contestDetailView.as_view() ),
     url(r'^contest/(?P<contest_id>\d+)/problem/(?P<pk>\d+)/$', problemDetailView.as_view()),
     url(r'^contest/(?P<contest_id>\d+)/problem/(?P<problem_id>\d+)/submit$', 'judge.views.submit'),
+    url(r'^author/problem$', 'judge.views.authorProblemsView'),
+    url(r'^author/problem/add$', 'judge.views.addProblem'),
+    url(r'^author/problem/edit/(?P<problem_id>\d+)/$', 'judge.views.editProblem'),
     # Uncomment the admin/doc line below to enable admin documentation:
 
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

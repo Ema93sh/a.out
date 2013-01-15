@@ -14,12 +14,22 @@
 			<ul>
 					{% block menu_buttons %} {% endblock %}
 					{% if request.user.is_authenticated %}
-					<li><a href="/account/profile">{{ request.user }}</a>
+					{% for group in request.user.groups.all %}
+					{% if group.name == 'Authors' %}
+					<li><a href="/author/problem">Author</a>
+					<ul>
+						<li><a href="/author/problem">Problem</a></li>
+						<li><a href="/author/contest">Contest</a></li>
+					</ul>
+					{% endif %}
+					{% endfor %}
+					</li>
+					<li><a href="/account/{{ request.user.id }}">{{ request.user }}</a>
 					    <ul>
 						    <li><a href="/account/{{ request.user.id }}">view profile</a></li>
 						    <li><a href="/account/{{ request.user.id }}/submissions">Submissions</a></li>
 						    <li><a href="/account/logout?next={{ request.path }}">Logout</a></li>
-						</ul>	    
+					     </ul>	    	
 					</li>
 					{% else %}
 					<li><a href="/account/login?next={{request.path}}">Login</a></li>
@@ -37,6 +47,9 @@
 						{% block content %}
 						{% endblock %}
 					</div>
+					<br><br>
+					{% block comments %}
+					{% endblock %}
 				</div>
 				<div id="sidebar">
 					{% block sidebar %}

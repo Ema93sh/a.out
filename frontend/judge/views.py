@@ -6,6 +6,7 @@ from django.shortcuts import redirect, get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
+from django.http import Http404
 
 def get_recent_activity():
 	return Submission.objects.order_by('-date')[:10]
@@ -78,6 +79,43 @@ class contestDetailView( DetailView ):
 		return context
 
 
+@login_required
+def addComment( request, problem_id ):
+	problem = get_object_or_404( Problem, pk = problem_id)	
+	comment = Comment( author=request.user, problem = problem,  data= request.POST['comment'] )
+	comment.save()
+	return redirect( request.POST['next'] )
+
+
+@login_required
+def authorProblemsView( request ):
+	if request.user.groups.filter( name='Authors'):
+		return render_to_response( 'judge/author/problems.html', { }, context_instance = RequestContext( request ) )
+	raise Http404
+
+def addProblem( request ):
+	if request.method =='POST':
+		form = ProblemForm( request.POST , request.FILES)
+		if form.is_valid():
+			form.save()
+			return redirect('/author/problems')
+	else:
+		form = ProblemForm()
+
+	return render_to_response('judge/author/add_problem.html', {'form': form}, context_instance = RequestContext( request ))
+
+
+@login_required
+def editProblem( request, problem_id ):
+	problem = get_object_or_404( Problem, pk = problem_id )
+	if request.method =='POST':
+		form = ProblemForm( request.POST , request.FILES, instance = problem)
+		if form.is_valid():
+			form.save()
+			return redirect('author/problems')
+	else:
+		form = ProblemForm( instance = problem )
+	return render_to_response('judge/author/edit_problem.html', {'form': form, 'problem' : problem}, context_instance = RequestContext( request ))
 
 def submission( request, submission_id ):
 	submission = get_object_or_404( Submission, pk=submission_id )
@@ -99,6 +137,8 @@ def submit( request, problem_id, contest_id = None ):
 			contest = None
 			if contest_id:
 				contest = get_object_or_404( Contest, pk = contest_id )
+				if not contest.isActive:
+					raise Http404
 			submission = Submission( user=request.user, problem = problem, contest = contest, language = form.cleaned_data['language'], userCode = request.FILES['userCode'] );
 			submission.save()
 			jobqueue = JobQueue( submission = submission )
@@ -111,4 +151,7 @@ def submit( request, problem_id, contest_id = None ):
 	inContest = False
 	if contest_id:
 		inContest = True
+		contest = get_object_or_404( Contest, pk = contest_id )
+		if not contest.isActive():
+			return redirect( '/contest/' + contest_id )
 	return render_to_response( 'judge/submit.html', { 'inContest': inContest, 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )

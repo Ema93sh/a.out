@@ -11,7 +11,9 @@
 <h2 class="title"><a href="{{ request.path }}">{{ contest.name }} - {{ problem.title }}</a></h2>
 <div id="entry">
 	<p> {{ problem.description }} </p>
+	{% if contest.isActive %}
 	<a href="submit">SUBMIT</a>
+	{% endif %}
 </div>
 {% endblock %}
 

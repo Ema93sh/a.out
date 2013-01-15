@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %} Author {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+
+{% block content %}
+<h2 class="title"><a href="{{ request.path }}">Author - Edit Problem - {{ problem.title }}</a></h2>
+<div id="entry">
+	<form method="POST"  enctype="multipart/form-data" action="{{ request.path }}">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Save">
+	</form>
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+
