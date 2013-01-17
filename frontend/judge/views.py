@@ -77,15 +77,15 @@ class contestDetailView( DetailView ):
 		# Call the base implementation first to get a context
 		context = super( contestDetailView, self).get_context_data(**kwargs)
 		context['recent_activity'] = get_recent_activity()
-		solved_problems = [ ]
-		submissions = Submission.objects.filter( user = self.request.user , contest = self.get_object())
-		for submission in submissions:
-			if submission.status == 'ACC':
-				if submission.problem.id not in solved_problems:
-					solved_problems.append( submission.problem.id )
-		context['solved_problem'] = solved_problems
+		if self.request.user.is_authenticated():
+			solved_problems = [ ]
+			submissions = Submission.objects.filter( user = self.request.user , contest = self.get_object())
+			for submission in submissions:
+				if submission.status == 'ACC':
+					if submission.problem.id not in solved_problems:
+						solved_problems.append( submission.problem.id )
+			context['solved_problem'] = solved_problems
 		return context
-
 
 
 @login_required

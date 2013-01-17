@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="title"><a href="{{ request.path }}">{{ contest.name }}</a></h2>
+<h2 class="title"><a href="/contest">Contest</a> - <a href="{{ request.path }}">{{ contest.name }}</a></h2>
 <div id="entry">
 	<h3>Problems - <a href="ranking">View Ranking</a></h3>
 	<br>
@@ -22,7 +22,9 @@
 			<th>Code</th>
 			<th>Title</th>
 			<th>Global Submissions</th>
+			{% if solved_problem %}
 			<th>Status</th>
+			{% endif %}
 
 		</thead>
 		<tbody>
@@ -31,10 +33,12 @@
 				<td>{{ problem.code }}</td>
 				<td><a href="/contest/{{contest.id}}/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
 				<td>{{ problem.submission_set.count }}</td>
+				{% if solved_problem %}
 				{% if problem.id in solved_problem %}
 				<td> Solved </td>
 				{% else %}
 				<td> Unsolved </td>
+				{% endif %}
 				{% endif %}
 			</tr>
 			{% endfor %}

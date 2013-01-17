@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="title"><a href="/contest/{{ contest.id }}">{{ contest.name }}</a> - {{ problem.title }}</h2>
+<h2 class="title"><a href="/contest">Contest</a> - <a href="/contest/{{ contest.id }}">{{ contest.name }}</a> - {{ problem.title }}</h2>
+
 <div id="entry">
 	<p> {{ problem.description }} </p>
 	{% if contest.isActive %}
