@@ -16,8 +16,8 @@ class SubmissionAdmin( admin.ModelAdmin ):
 
 class ContestAdmin( admin.ModelAdmin ):
 	list_display = ( 'code', 'name', 'startTime', 'endTime', 'isActive' )
-	filter_horizontal = ('problems', )
-	fields = ( 'code', 'name', 'admin', 'startTime', 'endTime', 'problems',  'penalty_submission' )
+	filter_horizontal = ('problems', 'users')
+	fields = ( 'code', 'name', 'admin', 'startTime', 'endTime', 'problems',  'penalty_submission' , 'users')
 
 admin.site.register( Language )
 admin.site.register( Problem, ProblemAdmin )

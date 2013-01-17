@@ -51,6 +51,13 @@ class Problem( models.Model ):
 				count += 1
 		return count
 
+	def solved( self, user, contest ):
+		submissions = Submission.objects.filter( user = user, contest = contest )
+		for submission in submissions:
+			if submission.status == 'ACC':
+				return True
+		return False
+
 	class Meta:
 		db_table = 'problems'
 
@@ -72,7 +79,7 @@ class Contest( models.Model ):
 	startTime = models.DateTimeField()
 	endTime = models.DateTimeField()
 	admin = models.ForeignKey( User, related_name = "admin+") 
-	users = models.ManyToManyField( User )
+	users = models.ManyToManyField( User , blank = True)
 	penalty_submission = models.BooleanField( 'Penalty for Wrong submission' )
 	
 	def isActive( self ):
@@ -90,11 +97,13 @@ class Contest( models.Model ):
 class Ranking( models.Model ):
 	contest = models.ForeignKey( Contest )
 	user = models.ForeignKey( User )
-	score = models.IntegerField(default=0)
-	total_time_elapsed = models.TimeField()
+	score = models.IntegerField( default = 0 )
+	penalty = models.IntegerField( default = 0 )
+	total_time_elapsed = models.IntegerField( default = 0 )
+	
 	class Meta:
 		db_table = 'score'
-		ordering = ['-score']
+		ordering = ['-score', 'penalty', '-total_time_elapsed']
 
 def submission_file_name(instance, filename):
 	    return '/'.join(['submissions', instance.user.username, instance.problem.code, filename ])

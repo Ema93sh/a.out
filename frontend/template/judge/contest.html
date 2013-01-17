@@ -30,16 +30,28 @@
 			<th> Title </th>
 			<th> Start Time </th>
 			<th> End Time </th>
+			<th> Status </th>
 		</thead>
 
 		<tbody>
 		{% for contest in contests %}	
+		{% if contest.isActive %}
 		<tr class="gradeA">
 			<td>{{ contest.code }} </td>
+			{% if request.user in contest.users.all %}
 			<td><a href="/contest/{{ contest.id }}/">{{ contest.name }}</a></td>
+			{% else %}
+			<td>{{ contest.name }}</td>
+			{% endif %}
 			<td>{{ contest.startTime }}</td>
 			<td>{{ contest.endTime }}</td>
+			{% if request.user in contest.users.all %}
+			<td>Registered</td>
+			{% else %}
+			<td>Not Registered</td>
+			{% endif %}
 		</tr>
+		{% endif %}
 		{% endfor %}
 	</tbody>
 </table>
@@ -55,14 +67,20 @@
 			<th> Title </th>
 			<th> Start Time </th>
 			<th> End Time </th>
+			<th> Register </th>
 		</thead>
 		<tbody>
 		{% for contest in future_contest %}	
 		<tr class="gradeA">
 			<td>{{ contest.code }} </td>
-			<td><a href="/contest/{{ contest.id }}/">{{ contest.name }}</a></td>
+			<td>{{ contest.name }}</td>
 			<td>{{ contest.startTime }}</td>
 			<td>{{ contest.endTime }}</td>
+			{% if request.user in contest.users.all %}
+			<td>registered</td>
+			{% else %}
+			<td><a href="/contest/{{ contest.id }}/register/">Register</a></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 	</tbody>

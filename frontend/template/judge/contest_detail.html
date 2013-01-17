@@ -14,14 +14,16 @@
 {% block content %}
 <h2 class="title"><a href="{{ request.path }}">{{ contest.name }}</a></h2>
 <div id="entry">
-	<h3>Problems</h3>
+	<h3>Problems - <a href="ranking">View Ranking</a></h3>
 	<br>
 	<br>
 	<table class ="display">
 		<thead>
 			<th>Code</th>
 			<th>Title</th>
-			<th>Submissions</th>
+			<th>Global Submissions</th>
+			<th>Status</th>
+
 		</thead>
 		<tbody>
 			{% for problem in contest.problems.all %}
@@ -29,6 +31,11 @@
 				<td>{{ problem.code }}</td>
 				<td><a href="/contest/{{contest.id}}/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
 				<td>{{ problem.submission_set.count }}</td>
+				{% if problem.id in solved_problem %}
+				<td> Solved </td>
+				{% else %}
+				<td> Unsolved </td>
+				{% endif %}
 			</tr>
 			{% endfor %}
 		</tbody>
