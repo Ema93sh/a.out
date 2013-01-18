@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
 from djangoratings.fields import RatingField
 from django.utils import timezone
+from tinymce.models import HTMLField
+
 # Create your models here.
 
 
@@ -31,7 +32,7 @@ class Problem( models.Model ):
 	
 	code = models.CharField( 'CODE', max_length=10, unique = True )
 	title = models.CharField( 'Title', max_length=30 )
-	description = models.TextField( 'Description' )
+	description = models.TextField( 'Description')
 	inputFile = models.FileField( 'Sample Input', upload_to = problem_input_file_name)
 	outputFile = models.FileField( 'Sample Output', upload_to = problem_output_file_name)
 	isVisible = models.BooleanField('Visible in Practice mode')

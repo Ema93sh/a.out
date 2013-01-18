@@ -26,6 +26,9 @@ urlpatterns = patterns('',
     url(r'^author/problem$', 'judge.views.authorProblemsView'),
     url(r'^author/problem/add$', 'judge.views.addProblem'),
     url(r'^author/problem/edit/(?P<problem_id>\d+)/$', 'judge.views.editProblem'),
+
+    
+    url(r'^tinymce/', include('tinymce.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
 
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

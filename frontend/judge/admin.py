@@ -1,6 +1,6 @@
 from judge.models import Contest, Problem, Language, Submission, JobQueue, Comment
 from django.contrib import admin
-
+from judge.forms import *
 
 class ProblemAdmin(admin.ModelAdmin):
 	list_display = ('code', 'title', 'sourceLimit', 'timeLimit', 'memoryLimit', 'isVisible', 'solutionVisible', )
@@ -8,6 +8,7 @@ class ProblemAdmin(admin.ModelAdmin):
 	list_editable = ( 'isVisible', )
 	filter_horizontal = ( 'author', 'languages' )
 	fields = ( 'code', 'title', 'description',  'sourceLimit', 'timeLimit', 'memoryLimit', 'isVisible', 'inputFile', 'outputFile', 'author', 'languages', )
+	form = ProblemForm
 
 class SubmissionAdmin( admin.ModelAdmin ):
 	list_display = ( 'user', 'problem', 'status', 'language', 'time', 'memory','contest' )

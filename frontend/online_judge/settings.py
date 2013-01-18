@@ -1,9 +1,11 @@
 # Django settings for online_judge project.
 
+ROOT_DIR = "/Learning/Projects/GIT/a.out/"
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
+
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -46,7 +48,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/Learning/Projects/GIT/a.out/data/'
+MEDIA_ROOT = ROOT_DIR + 'data/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -61,7 +63,7 @@ LOGIN_URL = "/account/login"
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/Learning/Projects/GIT/a.out/frontend/static'
+STATIC_ROOT = ROOT_DIR + 'frontend/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -72,7 +74,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/Learning/Projects/GIT/a.out/frontend/template/static",
+    ROOT_DIR + "frontend/template/static",
 )
 
 # List of finder classes that know how to find static files in
@@ -122,7 +124,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/Learning/Projects/GIT/a.out/frontend/template",
+    ROOT_DIR + "frontend/template",
     )
 
 INSTALLED_APPS = (
@@ -138,7 +140,9 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'judge',
     'djangoratings',
+    'tinymce',
 )
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -168,3 +172,16 @@ LOGGING = {
         },
     }
 }
+
+
+# Django tinymce configuration
+
+TINYMCE_DEFAULT_CONFIG = {
+		    'plugins': "table,spellchecker,paste,searchreplace",
+		    'theme': "advanced",
+		    'cleanup_on_startup': True,
+		    'custom_undo_redo_levels': 10,
+		    }
+
+TINYMCE_SPELLCHECKER = True
+TINYMCE_COMPRESSOR = False

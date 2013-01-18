@@ -122,7 +122,7 @@ def editProblem( request, problem_id ):
 		form = ProblemForm( request.POST , request.FILES, instance = problem)
 		if form.is_valid():
 			form.save()
-			return redirect('author/problems')
+			return redirect('/author/problem')
 	else:
 		form = ProblemForm( instance = problem )
 	return render_to_response('judge/author/edit_problem.html', {'form': form, 'problem' : problem}, context_instance = RequestContext( request ))

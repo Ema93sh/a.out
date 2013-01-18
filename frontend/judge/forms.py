@@ -2,6 +2,8 @@ from django import forms
 from judge.models import Comment, Submission, Problem , Language, Problem
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import User
+from tinymce.widgets import TinyMCE
+from django.core.urlresolvers import reverse
 
 class SubmissionForm(forms.Form):
 	language =  forms.ModelChoiceField(Language.objects.all())
@@ -14,10 +16,10 @@ class SubmissionForm(forms.Form):
 			self.fields['language'].queryset= problem.languages
 
 class ProblemForm(forms.ModelForm):
-	author = forms.ModelMultipleChoiceField(
-			    queryset= User.objects.all(),
-			        required=False, widget=FilteredSelectMultiple( verbose_name="Author", is_stacked=False)
-				)
-	filter_horizontal = {'author'}
 	class Meta:
 		model = Problem
+		widgets = {
+				'description' : TinyMCE(attrs={'cols': 80, 'rows': 30, } ),
+				}
+
+	
