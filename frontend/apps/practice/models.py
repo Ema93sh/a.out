@@ -60,10 +60,14 @@ class Problem( models.Model ):
 		db_table = 'problems'
 
 class Comment( models.Model ):
-	author = models.ForeignKey( User )
-	date = models.DateTimeField(auto_now_add = True)
-	data = models.TextField()
+
+	def __unicode__(self):
+		return self.data
+
+	author = models.ForeignKey(  User )
+	date = models.DateTimeField('Date Added', auto_now_add = True)
+	data = models.TextField('Comment')
 	#replies = models.ManyToManyField( Comment )
-	approved = models.BooleanField(default = True)
+	approved = models.BooleanField('is Approved', default = True)
 	problem = models.ForeignKey( Problem )
 

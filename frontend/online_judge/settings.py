@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'apps.contest',
     'apps.submission',
     'apps.djangoratings',
+    'apps.author',
     'tinymce',
 )
 

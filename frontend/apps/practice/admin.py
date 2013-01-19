@@ -11,8 +11,9 @@ class ProblemAdmin(admin.ModelAdmin):
 	fields = ( 'code', 'title', 'description',  'sourceLimit', 'timeLimit', 'memoryLimit', 'isVisible', 'inputFile', 'outputFile', 'author', 'languages', )
 	form = ProblemForm
 
-
+class CommentAdmin(admin.ModelAdmin):
+	list_display = ('author', 'problem', 'data', 'date' )
 
 admin.site.register( Language )
 admin.site.register( Problem, ProblemAdmin )
-admin.site.register( Comment )
+admin.site.register( Comment, CommentAdmin )

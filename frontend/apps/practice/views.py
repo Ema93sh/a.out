@@ -38,46 +38,13 @@ class problemListView( ListView ):
 		context['recent_activity'] = get_recent_activity()
 		return context
 
-
 @login_required
 def addComment( request, problem_code ):
 	problem = get_object_or_404( Problem, code = problem_code)	
-	comment = Comment( author=request.user, problem = problem,  data= request.POST['comment'] )
-	comment.save()
+	if len(str(request.POST['comment'])) > 6:
+		comment = Comment( author=request.user, problem = problem,  data= request.POST['comment'] )
+		comment.save()
 	return redirect( request.POST['next'] )
-
-
-@login_required
-def authorProblemsView( request ):
-	if request.user.groups.filter( name='Authors'):
-		return render_to_response( 'judge/author/problems.html', { }, context_instance = RequestContext( request ) )
-	raise Http404
-
-@login_required
-def addProblem( request ):
-	if request.method =='POST':
-		form = ProblemForm( request.POST , request.FILES)
-		if form.is_valid():
-			form.save()
-			return redirect('/author/problems')
-	else:
-		form = ProblemForm()
-
-	return render_to_response('judge/author/add_problem.html', {'form': form}, context_instance = RequestContext( request ))
-
-
-@login_required
-def editProblem( request, problem_id ):
-	problem = get_object_or_404( Problem, pk = problem_id )
-	if request.method =='POST':
-		form = ProblemForm( request.POST , request.FILES, instance = problem)
-		if form.is_valid():
-			form.save()
-			return redirect('/author/problem')
-	else:
-		form = ProblemForm( instance = problem )
-	return render_to_response('judge/author/edit_problem.html', {'form': form, 'problem' : problem}, context_instance = RequestContext( request ))
-
 
 @login_required
 def submit( request, problem_code ):

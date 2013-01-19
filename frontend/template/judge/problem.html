@@ -9,7 +9,7 @@
 
 
 {% block content %}
-<h2 class="title"><a href="#">{{ problem.title }}</a></h2>
+<h2 class="title"><a href="/practice">Practice</a> - <a href="#">{{ problem.title }}</a></h2>
 <div id="entry">
 	<p> {{ problem.description|safe }} </p>
 	<a href="/practice/problem/{{ problem.code }}/submit">SUBMIT</a>

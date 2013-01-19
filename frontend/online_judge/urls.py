@@ -15,10 +15,7 @@ urlpatterns = patterns('',
     url(r'^practice/', include('apps.practice.urls' )), 
     url(r'^contest/', include('apps.contest.urls')),
     url(r'^submission/', include('apps.submission.urls')),
-
-    url(r'^author/problem$', 'apps.practice.views.authorProblemsView'),
-    url(r'^author/problem/add$', 'apps.practice.views.addProblem'),
-    url(r'^author/problem/edit/(?P<problem_id>\d+)/$', 'apps.practice.views.editProblem'),
+    url(r'^author/', include('apps.author.urls')),
 
     
     #    url(r'^tinymce/', include('apps.tinymce.urls')),

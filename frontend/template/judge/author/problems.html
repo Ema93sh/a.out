@@ -34,7 +34,7 @@
 		{% for problem in request.user.problem_set.all%}
 		<tr class="gradeA">
 			<td>{{ problem.code }} </td>
-			<td><a href="/author/problem/edit/{{ problem.id }}">{{ problem.title }}</a></td>
+			<td><a href="/author/problem/edit/{{ problem.code }}">{{ problem.title }}</a></td>
 			<td>{{  problem.submission_set.count }} </td>
 			<td>{{ problem.success }} </td>
 		</tr>
