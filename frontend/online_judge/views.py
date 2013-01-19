@@ -19,8 +19,8 @@ def logoutView( request ):
 	logout( request )
 	return redirect( home )
 
-def profile( request, user_id ):
-	user = get_object_or_404( User, pk=user_id )
+def profile( request, user_name ):
+	user = get_object_or_404( User, username=user_name )
 	if user == request.user:
 		if request.method == 'POST':
 			user.first_name = request.POST['first_name']

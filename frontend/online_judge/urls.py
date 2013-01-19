@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'online_judge.views.home', name='home'),
     url(r'^account/logout$', 'online_judge.views.logoutView'),
     url(r'^account/login$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
-    url(r'^account/(?P<user_id>\d+)/$', 'online_judge.views.profile'),
+    url(r'^account/(?P<user_name>[A-Za-z0-9-]+)/$', 'online_judge.views.profile'),
    
 
     url(r'^practice/', include('apps.practice.urls' )), 
