@@ -9,8 +9,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
 		    url(r'^$', contestListView.as_view() ),
 		    url(r'^(?P<slug>\d+)/$', contestDetailView.as_view() ),
-		    url(r'^(?P<contest_code>[A-Za-z]+)/problem/(?P<slug>[A-Za-z]+)/$', problemDetailView.as_view()),
-		    url(r'^(?P<contest_code>[A-Za-z]+)/problem/(?P<problem_id>\d+)/submit$', 'apps.contest.views.submit'),
-		    url(r'^(?P<contest_code>[A-Za-z]+)/register', 'apps.contest.views.register'),
-		    url(r'^(?P<contest_code>[A-Za-z]+)/ranking', 'apps.contest.views.ranking'),
+		    url(r'^(?P<contest_code>[A-Za-z0-9]+)/problem/(?P<slug>[A-Za-z0-9]+)/$', problemDetailView.as_view()),
+		    url(r'^(?P<contest_code>[A-Za-z0-9]+)/problem/(?P<problem_code>[A-Za-z0-9])/submit$', 'apps.contest.views.submit'),
+		    url(r'^(?P<contest_code>[A-Za-z0-9]+)/register', 'apps.contest.views.register'),
+		    url(r'^(?P<contest_code>[A-Za-z0-9]+)/ranking', 'apps.contest.views.ranking'),
 		   )
