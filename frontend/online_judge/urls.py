@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^author/problem/edit/(?P<problem_id>\d+)/$', 'apps.practice.views.editProblem'),
 
     
-    url(r'^tinymce/', include('apps.tinymce.urls')),
+    #    url(r'^tinymce/', include('apps.tinymce.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
 
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

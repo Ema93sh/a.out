@@ -1,6 +1,7 @@
 # Django settings for online_judge project.
 
-ROOT_DIR = "/home/vinith/GIT/a.out/"
+#ROOT_DIR = "/home/vinith/GIT/a.out/"
+ROOT_DIR = "/Learning/Projects/GIT/a.out/"
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
