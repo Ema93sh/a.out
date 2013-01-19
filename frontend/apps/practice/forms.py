@@ -1,8 +1,9 @@
+from models import *
+from apps.tinymce.widgets import TinyMCE
+
 from django import forms
-from judge.models import Comment, Submission, Problem , Language, Problem
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import User
-from tinymce.widgets import TinyMCE
 from django.core.urlresolvers import reverse
 
 class SubmissionForm(forms.Form):

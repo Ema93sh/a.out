@@ -34,7 +34,7 @@
 		{% for problem in problems %}
 		<tr class="gradeA">
 			<td>{{ problem.code }} </td>
-			<td><a href="/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
+			<td><a href="/practice/problem/{{ problem.code }}/">{{ problem.title }}</a></td>
 			<td>{{  problem.submission_set.count }} </td>
 			<td>{{ problem.success }} </td>
 		</tr>
