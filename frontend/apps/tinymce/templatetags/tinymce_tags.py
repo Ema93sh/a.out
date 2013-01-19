@@ -3,13 +3,13 @@
 
 from django import template
 from django.template.loader import render_to_string
-import tinymce.settings
+import apps.tinymce.settings
 
 register = template.Library()
 
 
 def tinymce_preview(element_id):
     return render_to_string('tinymce/preview_javascript.html',
-        {'base_url': tinymce.settings.JS_BASE_URL, 'element_id': element_id})
+        {'base_url': apps.tinymce.settings.JS_BASE_URL, 'element_id': element_id})
 
 register.simple_tag(tinymce_preview)
