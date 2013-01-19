@@ -16,11 +16,11 @@ int main()
    	while(true)
    	{
 
-   	   db.setQuery(string("SELECT submission_id FROM jobqueue LIMIT 1"));
+   	   db.setQuery(string("SELECT submission_id FROM jobQueue LIMIT 1"));
      	   db.useQuery();
       	   if(!(row=db.getRow()))
            {
-             printf("No submissions to be judged now\n");
+             //printf("No submissions to be judged now\n"); maybe uncomment later
              sleep(1);
            }
            else
