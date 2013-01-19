@@ -22,7 +22,7 @@ def addProblem( request ):
                 form = ProblemForm( request.POST , request.FILES)
                 if form.is_valid():
                         form.save()
-                        return redirect('/author/problems')
+                        return redirect('/author/problem/')
         else:
                 form = ProblemForm()
 
