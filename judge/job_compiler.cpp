@@ -19,6 +19,7 @@ private:
    double timeElapsed;
    string jobId;
    bool error; 
+   bool isCompiled;
    string timeLimit,sourceLimit,memoryLimit;
    string sampleInputPath;
    string sampleOutputPath;
@@ -92,13 +93,23 @@ public:
       memoryLimit = row[4];
       db->freeResult();
 
-      str = "SELECT compileParam FROM language WHERE id="+langid+" LIMIT 1";
+      str = "SELECT compileParam,langType FROM language WHERE id="+langid+" LIMIT 1";
       cout << str << endl;
       db->setQuery(str);
       db->useQuery();
       row = db->getRow();
       
       compileParam = row[0];
+      string temp=row[1];
+      if(temp[0]=='1'){
+        cout<<"compiled language \n";
+        isCompiled=true;
+      }
+      else {
+        isCompiled=false;
+        cout<<"intrepreted language \n";
+      }
+
       db->freeResult();
 
       //if it is an interpreted language call runIt
@@ -108,7 +119,8 @@ public:
    void compileIt()
    {
      sourcePath = path + "data/" + sourcePath;
-     string final = compileParam + " " + sourcePath;
+     if(!isCompiled)return;
+     string final = compileParam + " " + sourcePath + " -o environment/executable";
      cout << "compiling: " << final << endl;
      result = system(final.c_str());
 
@@ -126,8 +138,12 @@ public:
       struct timeval begin, end; //for calculating time elapsed
       string strtimeLimit="timeout "+timeLimit+"s ";
       //start timer
+      string final ="";
       sampleInputPath = path + "data/" + sampleInputPath;
-      string final = string("./a.out ") + "< " + sampleInputPath + " > " + "output"; 
+      if(isCompiled)
+        final = strtimeLimit+string(" environment/./executable ") + "< " + sampleInputPath + " > " + "environment/output"; 
+      else
+        final = strtimeLimit + compileParam + " " +  sourcePath + " < " + sampleInputPath + " > " + "environment/output";   
       cout << "running: " << final << endl;
       gettimeofday(&begin, NULL);
       ret=system(final.c_str());
@@ -151,11 +167,14 @@ public:
       sampleOutputPath = path + "data/" + sampleOutputPath;
       cout << "Sample Output:" << sampleOutputPath << endl; 
       string judgeOp=stringBuilder(sampleOutputPath);
-      string temp = path + "judge/output";
+      string temp = path + "judge/environment/output";
       cout << "Current Output:" << temp << endl;
       string userOP=stringBuilder(temp);
       if(judgeOp.compare(userOP)!=0)result=4;
       else result=5;
+
+      //clean environment directory
+      system("rm -r environment/*");
    }
 
    void updateResult()

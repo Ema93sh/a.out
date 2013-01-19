@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+CHOICE=[(1,'compiled'),(0,'intrepreted')]
 class Language( models.Model ):
 
 	def __unicode__(self):
@@ -12,6 +13,7 @@ class Language( models.Model ):
 	name = models.CharField( max_length=20 )
 	extension = models.CharField( max_length=5 )
 	compiler = models.CharField( max_length=10 )
+	langType = models.BooleanField("Language type",choices=CHOICE)
 	compileParam = models.CharField( "Compile Parameters", max_length=30, null = True, blank = True);
 	class Meta:
 		db_table = 'language'
