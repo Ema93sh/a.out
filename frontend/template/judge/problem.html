@@ -1,5 +1,4 @@
 {%extends 'base.html' %}
-{% load tinymce_tags %}
 {% block title %} Practice {% endblock %}
 
 {% block menu_buttons %}
@@ -8,16 +7,12 @@
 <li class="current_page_item"><a href="/practice">Practice</a></li>
 {% endblock %}
 
-{% block head %}
-{% tinymce_preview "preview-content" %}
-{% endblock %}
 
 {% block content %}
-<h2 class="title"><a href="#">Title</a></h2>
+<h2 class="title"><a href="#">{{ problem.title }}</a></h2>
 <div id="entry">
-	<div id="preview-content"><p>  </p> </div>
-
-	<a href="/problem/{{ problem.id }}/submit">SUBMIT</a>
+	<p> {{ problem.description|safe }} </p>
+	<a href="/practice/problem/{{ problem.code }}/submit">SUBMIT</a>
 </div> 
 {% endblock %}
 
