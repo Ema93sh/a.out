@@ -34,14 +34,13 @@
 {% endif %}
 {% if request.user.is_authenticated %}
 Add Comment:
-<form method="post" action="/problem/{{ problem.id }}/comment/add">
+<form method="post" action="/practice/problem/{{ problem.code }}/comment/add">
 	{% csrf_token %}
 	<textarea rows=7 name="comment">
 	</textarea>
 	<br>
 	<input type="hidden" name="next" value="{{ request.path }}" >
 	<input type="submit" value="Add">
-
 </form>
 {% endif %}
 {% endblock %}
