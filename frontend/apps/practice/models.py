@@ -1,4 +1,4 @@
-from apps.tinymce.models import HTMLField
+from tinymce.models import HTMLField
 from apps.djangoratings.fields import RatingField
 from django.db import models
 from django.contrib.auth.models import User

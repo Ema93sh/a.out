@@ -1,5 +1,5 @@
 from models import *
-from apps.tinymce.widgets import TinyMCE
+from tinymce.widgets import TinyMCE
 
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
