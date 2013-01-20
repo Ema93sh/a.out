@@ -1,7 +1,10 @@
 from models import *
+from apps.practice.models import *
+from apps.contest.models import *
 
 from django.http import HttpResponseForbidden, HttpResponse
 from django.template import RequestContext
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
@@ -22,10 +25,23 @@ class submissionListView( ListView ):
                 # Call the base implementation first to get a context
                 context = super( submissionListView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
-                return context
+	       	return context
 
         def get_queryset( self ):
-		        return Submission.objects.filter( user = self.request.user ).order_by('-date')
+		queryset = Submission.objects.all()
+		if 'username' in self.kwargs:
+			user = get_object_or_404( User, username = self.kwargs['username'] )
+			queryset = queryset.filter( user = user )
+		if 'contest_code' in self.kwargs:
+			contest = get_object_or_404( Contest, code = self.kwargs['contest_code'] )
+			queryset = queryset.filter( contest = contest )
+		if 'problem_code' in self.kwargs:
+			problem = get_object_or_404( Problem, code = self.kwargs['problem_code'] )
+			queryset = queryset.filter( problem = problem )
+		return queryset.order_by('-date')
+
+
+
 
 def submission( request, submission_id ):
         submission = get_object_or_404( Submission, pk=submission_id )

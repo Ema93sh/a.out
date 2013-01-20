@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 CHOICE=[(1,'compiled'),(0,'intrepreted')]
+
 class Language( models.Model ):
 
 	def __unicode__(self):
