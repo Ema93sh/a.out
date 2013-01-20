@@ -39,7 +39,7 @@
 		<tr class="gradeA">
 			<td>{{ contest.code }} </td>
 			{% if request.user in contest.users.all %}
-			<td><a href="/contest/{{ contest.id }}/">{{ contest.name }}</a></td>
+			<td><a href="/contest/{{ contest.code }}/">{{ contest.name }}</a></td>
 			{% else %}
 			<td>{{ contest.name }}</td>
 			{% endif %}
@@ -79,7 +79,7 @@
 			{% if request.user in contest.users.all %}
 			<td>registered</td>
 			{% else %}
-			<td><a href="/contest/{{ contest.id }}/register/">Register</a></td>
+			<td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
 			{% endif %}
 		</tr>
 		{% endfor %}
@@ -103,7 +103,7 @@
 		{% for contest in past_contest %}	
 		<tr class="gradeA">
 			<td>{{ contest.code }} </td>
-			<td><a href="/contest/{{ contest.id }}/">{{ contest.name }}</a></td>
+			<td><a href="/contest/{{ contest.code }}/">{{ contest.name }}</a></td>
 			<td>{{ contest.startTime }}</td>
 			<td>{{ contest.endTime }}</td>
 		</tr>

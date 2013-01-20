@@ -31,7 +31,7 @@
 			{% for problem in contest.problems.all %}
 			<tr class="gradeA">
 				<td>{{ problem.code }}</td>
-				<td><a href="/contest/{{contest.id}}/problem/{{ problem.id }}/">{{ problem.title }}</a></td>
+				<td><a href="/contest/{{contest.code}}/problem/{{ problem.code }}/">{{ problem.title }}</a></td>
 				<td>{{ problem.submission_set.count }}</td>
 				{% if solved_problem %}
 				{% if problem.id in solved_problem %}

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="title"><a href="{{ request.path }}">Submit - {{ problem.title }}</a></h2>
+<h2 class="title"><a href="/contest/{{ contest.code }}/">{{ contest.name }}</a> - <a href="/contest/{{ contest.code }}/problem/{{problem.code}}/">{{problem.title}}</a> - <a href="{{ request.path }}">Submit</a></h2>
 <div id="entry">
 	<form method="post" action="{{ request.path }}"  enctype="multipart/form-data">
 		{% csrf_token %}

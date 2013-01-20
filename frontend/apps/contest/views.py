@@ -1,4 +1,5 @@
 from models import *
+from forms import *
 from apps.practice.models import *
 from apps.submission.models import *
 
@@ -17,7 +18,7 @@ def get_recent_activity():
 
 class contestListView( ListView ):
         model = Contest
-        template_name = 'judge/contest.html'
+        template_name = 'judge/contest/contest.html'
         context_object_name = 'contests'
         queryset = Contest.objects.all()
         def get_context_data(self, **kwargs):
@@ -30,7 +31,7 @@ class contestListView( ListView ):
 
 class contestDetailView( DetailView ):
         model = Contest
-        template = 'judge/contest_detail.html'
+        template_name = 'judge/contest/contest_detail.html'
         context_object_name = 'contest'
 	slug_field = 'code'
 
@@ -47,6 +48,22 @@ class contestDetailView( DetailView ):
                                                 solved_problems.append( submission.problem.id )
                         context['solved_problem'] = solved_problems
                 return context
+
+class problemDetailView( DetailView ):
+	model = Problem
+	context_object_name = 'problem'
+	slug_field = 'code'
+	template_name = 'judge/contest/contest_problem.html'
+
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super(problemDetailView, self).get_context_data(**kwargs)
+		context['recent_activity'] = get_recent_activity()
+		context['contest'] = Contest.objects.get( code = self.kwargs['contest_code'] )
+		return context
+
+
+
 
 def calculateScore( user, contest ):
         score = 0
@@ -90,7 +107,7 @@ def ranking( request, contest_code ):
         if contest.isActive():
                 calculateAllScores( contest )
         ranks = Ranking.objects.filter( contest = contest ).order_by('-score', 'penalty', 'total_time_elapsed')
-        return render_to_response('judge/contest_ranking.html', { 'contest': contest, 'ranks': ranks }, context_instance=RequestContext(request) )
+        return render_to_response('judge/contest/contest_ranking.html', { 'contest': contest, 'ranks': ranks }, context_instance=RequestContext(request) )
 
 
 @login_required
@@ -111,7 +128,7 @@ def submit( request, problem_code, contest_code ):
                 form = SubmissionForm(request.POST, request.FILES)
                 if form.is_valid():
                         language = get_object_or_404( Language, pk= request.POST['language'] )
-                        contest = get_object_or_404( Contest, pk = contest_id )
+                        contest = get_object_or_404( Contest, code = contest_code )
                         if not contest.isActive:
 				raise Http404
 			if request.user not in contest.users.all():
@@ -120,14 +137,13 @@ def submit( request, problem_code, contest_code ):
                         submission.save()
                         jobqueue = JobQueue( submission = submission )
                         jobqueue.save()
-                        return redirect( '/contest/' + contest_id + '/problem/' + problem_id )
+                        return redirect( '/contest/' + contest_code + '/problem/' + problem_code )
 
         form = SubmissionForm(problem = problem)
-        inContest = True
-	contest = get_object_or_404( Contest, pk = contest_code )
+	contest = get_object_or_404( Contest, code = contest_code )
 	if contest.isActive():
 		if request.user not in contest.users.all():
 			raise Http404
                 if not contest.isActive():
                         return redirect( '/contest/' + contest_code )
-        return render_to_response( 'judge/submit.html', { 'inContest': inContest, 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
+	return render_to_response( 'judge/contest/submit.html', {  'contest': contest, 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )

@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="title"><a href="/contest/{{ contest.id}}">{{ contest.name }}</a> - Ranking</h2>
+<h2 class="title"><a href="/contest/{{ contest.code}}">{{ contest.name }}</a> - Ranking</h2>
 <div id="entry">
 	<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
 		<thead>
@@ -34,7 +34,7 @@
 		{% for rank in ranks %}
 		<tr class="gradeA">
 			<td>{{ forloop.counter }} </td>
-			<td><a href="/account/{{ rank.user.id }}/">{{ rank.user }}</a></td>
+			<td><a href="/account/{{ rank.user.username }}/">{{ rank.user }}</a></td>
 			<td>{{ rank.score}} </td>
 			<td>{{ rank.penalty }} </td>
 		</tr>

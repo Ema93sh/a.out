@@ -27,7 +27,7 @@
 					<li><a href="/account/{{ request.user.username }}">{{ request.user }}</a>
 					    <ul>
 						    <li><a href="/account/{{ request.user.username }}">view profile</a></li>
-						    <li><a href="/account/{{ request.user.username }}/submissions">Submissions</a></li>
+						    <li><a href="/submission/{{ request.user.username }}/">Submissions</a></li>
 						    <li><a href="/account/logout?next={{ request.path }}">Logout</a></li>
 					     </ul>	    	
 					</li>

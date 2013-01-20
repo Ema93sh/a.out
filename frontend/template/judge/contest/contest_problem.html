@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %} Contest - {{ contest.name }} - {{ problem.title }} {% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li class="current_page_item"><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+{% block head %}
+<style type="text/css">
+        #container
+        {
+                width: 100%;
+                height: 135px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 5px;
+                border-top: 2px solid;
+                border-bottom: 2px solid;
+                overflow: none;
+        }
+
+        #field
+        {
+                width: 100%;
+                float: left;
+                font-size: 14px;
+                padding: 4px;
+        }
+
+        #label
+        {
+                color: #1F1F1F;
+                font-style: bold;
+                margin-right: 5px;
+                float: left;
+        }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="title"><a href="/contest">Contest</a> - <a href="/contest/{{ contest.code }}">{{ contest.name }}</a> - {{ problem.title }}</h2>
+<div id="entry">
+	<p> {{ problem.description|safe }} </p>
+	<h3>Problem Details:</h3>
+        <div id="container">
+                <div id="field">
+                        <div id="label">Author:</div>
+                        {% for author in problem.author.all %}
+                        {{ author }}
+                        {% endfor %}
+                </div>
+
+                <div id="field">
+                        <div id="label">Date added:</div>
+                        {{ problem.dateAdded }}
+                </div>
+
+                <div id="field">
+                        <div id="label">Source Limit:</div>
+                        {{ problem.sourceLimit }} bytes
+                </div>
+
+                <div id="field">
+                        <div id="label">Time Limit:</div>
+                        {{ problem.timeLimit }} s
+                </div>
+
+                <div id="field">
+                        <div id="label">Languages:</div>
+                        {% for language in problem.languages.all %}
+                        {{ language }}
+                        {% endfor %}
+                </div>
+        </div>	
+	{% if contest.isActive %}
+	<a href="submit">SUBMIT</a>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Best Solutions </h2>
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}

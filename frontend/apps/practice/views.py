@@ -18,7 +18,7 @@ class problemDetailView( DetailView ):
 	model = Problem
 	context_object_name = 'problem'
 	slug_field = 'code'
-	template_name = 'judge/problem.html'
+	template_name = 'judge/practice/problem.html'
 
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
@@ -29,7 +29,7 @@ class problemDetailView( DetailView ):
 
 class problemListView( ListView ):
 	model = Problem
-	template_name = 'judge/practice.html'
+	template_name = 'judge/practice/practice.html'
 	context_object_name = 'problems'
 	queryset = Problem.objects.filter( isVisible = True )
 	def get_context_data(self, **kwargs):
@@ -60,4 +60,4 @@ def submit( request, problem_code ):
 			return redirect( '/practice/problem/'+ problem_code )
 
 	form = SubmissionForm(problem = problem)
-	return render_to_response( 'judge/submit.html', { 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
+	return render_to_response( 'judge/practice/submit.html', { 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
