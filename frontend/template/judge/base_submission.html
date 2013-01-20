@@ -9,7 +9,11 @@
 	<tbody>
 	{% for submission in submissions %}
 	<tr>
-		<td><a href="/problem/{{ submission.problem.id }}/">{{ submission.problem.code }}</a></td>
+		{% if submission.contest_id %}
+               <td><a href="/{{ submission.contest_id }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+               {% else %}
+               <td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+               {% endif %}
 		<td>{{ submission.problem.title }}</td>
 		<td>{{ submission.status }}</td>
 	</tr>
