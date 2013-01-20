@@ -3,8 +3,15 @@ from apps.djangoratings.fields import RatingField
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from pygments.lexers import get_all_lexers
 
 CHOICE=[(1,'compiled'),(0,'intrepreted')]
+
+syntaxes = [lexer[0] for lexer in get_all_lexers()]
+
+for lexer in get_all_lexers():
+	lex = ( str(lexer[0]).lower(), lexer[0] )
+	syntaxes.append( lexer )
 
 class Language( models.Model ):
 
@@ -16,6 +23,7 @@ class Language( models.Model ):
 	compiler = models.CharField( max_length=10 )
 	langType = models.BooleanField("Language type",choices=CHOICE)
 	compileParam = models.CharField( "Compile Parameters", max_length=30, null = True, blank = True);
+	#syntax = models.CharField( max_length=20, choices= syntaxes )
 	class Meta:
 		db_table = 'language'
 

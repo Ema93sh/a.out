@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load syntax %}
+{% block title %} View Solution {% endblock %}
+
+{% block head %}
+
+{%if style %}
+<style type="text/css">
+	{%highlight_css style%}
+</style>
+{% endif %}
+
+{% endblock %}
+
+{% block menu_buttons %}
+<li><a href="/">Home</a></li>
+<li><a href="/contest">Contest</a></li>
+<li><a href="/practice">Practice</a></li>
+{% endblock %}
+
+
+{% block content %}
+<h2 class="title"><a href="#">View Solution</a></h2>
+<div id="entry">
+	{% highlight_inline code syntax %}
+	<br>
+	<a href="/submission/download/{{submission.id}}">Download</a>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<h2> Recent Activity</h2>
+{% include 'judge/recent_activity.html' %}
+{% endblock %}
+

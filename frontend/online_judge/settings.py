@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'apps.djangoratings',
     'apps.author',
     'tinymce',
+    'apps.syntax_highlight',
 )
 
 # A sample logging configuration. The only tangible logging

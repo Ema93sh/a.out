@@ -11,6 +11,12 @@ from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from datetime import timedelta
 from django.http import Http404
+from pygments.lexers import get_all_lexers
+from pygments.styles import get_all_styles
+
+
+styles = list(get_all_styles())
+syntaxes = [lexer[0] for lexer in get_all_lexers()]
 
 def get_recent_activity():
         return Submission.objects.order_by('-date')[:10]
@@ -41,11 +47,18 @@ class submissionListView( ListView ):
 		return queryset.order_by('-date')
 
 
+def viewSubmission( request, submission_id ):
+	submission = get_object_or_404( Submission, pk=submission_id )
+	if not submission.problem.solutionVisible and submission.user != request.user:
+		return HttpResponseForbidden("You do not have permission to view this link")
+	fileHandle = open( submission.userCode.path, 'r+' )
+	code = fileHandle.read()
+	syntax = str(submission.language.name).lower()
+	return render_to_response( 'judge/view_solution.html',  { 'code': code, 'submission': submission, 'syntax': syntax, 'style': 'manni', 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request))
 
-
-def submission( request, submission_id ):
+def downloadSubmission( request, submission_id ):
         submission = get_object_or_404( Submission, pk=submission_id )
-        if not submission.problem.solutionVisible:
+        if not submission.problem.solutionVisible and submission.user != request.user:
                 return HttpResponseForbidden("You do not have permission to view this link")
         filename = submission.user.username + "_" + submission.problem.code +"_" + str(submission.id)
         response = HttpResponse( submission.userCode, content_type="text/plain" )
