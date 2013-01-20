@@ -15,6 +15,9 @@
 <div id="entry">
 	<div id="profileView">
 	{% csrf_token %}
+	{% if required_user.username == request.user.username %}
+	<a href="/account/{{required_user.username}}/edit">Edit profile</a>
+	{% endif %}
 	<div class="field">
 		<p class="label"> Username: </p>
 		<p class="value"> {{ required_user.username }} </p>

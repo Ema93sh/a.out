@@ -21,16 +21,18 @@ def logoutView( request ):
 
 def profile( request, user_name ):
 	user = get_object_or_404( User, username=user_name )
-	if user == request.user:
-		if request.method == 'POST':
-			user.first_name = request.POST['first_name']
-			user.last_name = request.POST['last_name']
-			user.email = request.POST['email']
-			user.save()
-			return redirect( home )
-		return render_to_response( 'editable_profile.html', {'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
-
-	else:
-		return render_to_response('basic_profile.html', { 'required_user': user, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
-
-
+	return render_to_response('basic_profile.html', { 'required_user': user, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
+	
+def editprofile(request, user_name):
+   user = get_object_or_404( User, username=user_name )
+   if user == request.user:
+      if request.method == 'POST':
+         user.first_name = request.POST['first_name']
+         user.last_name = request.POST['last_name']
+         user.email = request.POST['email']
+         user.save()
+         return redirect( '/account/'+user.username )
+      return render_to_response('editable_profile.html', {'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
+         
+   else:
+      return redirect( '/account/'+user.username )     
