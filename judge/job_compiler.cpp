@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include<fstream>
 #include <map>
 #include "database.h"
 
@@ -32,17 +33,12 @@ private:
 
 public:
    string stringBuilder(string path){
-      FILE *inp=fopen(path.c_str(),"r");
-      string ret="";
-      char c;
-      while((c=fgetc(inp))!=EOF){
-         if(!(c==' '||c=='\t'||c=='\n'))
-         ret+=c;
-      }
-      fclose(inp);
+      ifstream fin(path.c_str());
+      string ret="",s;
+      while(fin>>s)ret+=s+" ";
+      fin.close();
       return ret;
    }
-
    JobCompiler( string jid )
    {
       //path = "/home/vinith/GIT/a.out/";
