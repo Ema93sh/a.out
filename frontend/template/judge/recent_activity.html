@@ -14,7 +14,7 @@
 			{% else %}
 			<td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
 			{% endif %}
-			<td><a href="/account/{{ submission.user. }}/">{{ submission.user }}</a></td>
+			<td><a href="/account/{{ submission.user.username }}/">{{ submission.user.username }}</a></td>
 			<td>{{ submission.status }}</td>
 		</tr>
 	{% endfor %}
