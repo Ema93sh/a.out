@@ -38,6 +38,18 @@
 		<p class="value"> {{ required_user.email }} </p>
 	</div>
 	</div>
+	<h3> Problems solved </h3>
+	{% for contest,problems in solved_problems.items %}
+	  {{ contest }}:
+	  {% for problem in problems %}
+	    {% if contest == 'practice' %}
+	       <a href="/submission/{{required_user.username}}/{{problem}}/">{{problem}}</a>
+	     {% else %}
+	       <a href="/submission/{{contest}}/{{required_user.username}}/{{problem}}/">{{problem}}</a>
+            {% endif %}
+	  {% endfor %}
+	  <br>
+        {% endfor %}
 </div>
 {% endblock %}
 {% block sidebar %}
