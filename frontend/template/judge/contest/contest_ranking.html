@@ -27,16 +27,18 @@
 		<thead>
 			<th> Rank </th>
 			<th> User </th>
-			<th> Score </th>
+			<th> Problem Solved </th>
 			<th> Penalty </th>
+			<th> Total Time </th>
 		</thead>
 		<tbody>
 		{% for rank in ranks %}
 		<tr class="gradeA">
 			<td>{{ forloop.counter }} </td>
 			<td><a href="/account/{{ rank.user.username }}/">{{ rank.user }}</a></td>
-			<td>{{ rank.score}} </td>
-			<td>{{ rank.penalty }} </td>
+			<td>{{ rank.problemSolved }} </td>
+			<td>{{ rank.formatedPenalty }} </td>
+			<td>{{ rank.totalTime }} </td>
 		</tr>
 		{% endfor %}
 	</tbody>

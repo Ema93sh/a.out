@@ -76,10 +76,10 @@ def calculateScore( user, contest ):
                         if submission.date < contest.endTime:
                                 if submission.status == 'ACC':
                                         problem_submission_time = submission.date - contest.startTime
-                                        score += 10
+                                        score += 1
                                         break #till it encounters an accpeted solution, after the first accepted sol, all other submission for problem is ignored
                                 elif (submission.status != 'WAI') and (submission.status != 'ERR'):
-                                        penalty += 10
+                                        penalty += (60 * 20 )
                 if total_time < problem_submission_time:
                         total_time = problem_submission_time
 
@@ -87,26 +87,32 @@ def calculateScore( user, contest ):
         total_time_seconds = total_time.total_seconds()
 
         if not rank:
-                rank = Ranking( contest = contest, user = user, score = score, penalty = penalty, total_time_elapsed = total_time_seconds )
+		rank = Ranking( contest = contest, user = user, score = score, penalty = penalty, total_time_elapsed = total_time_seconds + penalty )
         else:
                 rank.score = score
                 rank.penalty = penalty
-                rank.total_time_elapsed = total_time_seconds
+                rank.total_time_elapsed = total_time_seconds + penalty  #add 20 mins for each penalty
         rank.save()
 
-        print("Score:" + str(score))
-        print("Penality:" + str(penalty))
-        print("total_time:" + str(total_time))
+        print("Score:" + str(rank.score))
+        print("Penality:" + rank.formatedPenalty())
+        print("total_time:" + str(rank.total_time_elapsed))
 
 def calculateAllScores( contest ):
         for user in contest.users.all():
                 calculateScore( user, contest )
+	contest.ranking_update = timezone.now()
+	contest.save()
 
 def ranking( request, contest_code ):
         contest = get_object_or_404( Contest, code = contest_code )
-        if contest.isActive():
-                calculateAllScores( contest )
-        ranks = Ranking.objects.filter( contest = contest ).order_by('-score', 'penalty', 'total_time_elapsed')
+	if contest.ranking_update:
+		if contest.ranking_update < contest.endTime:
+			calculateAllScores( contest )
+	else:
+		calculateAllScores( contest )
+
+	ranks = Ranking.objects.filter( contest = contest ).order_by('-score', 'penalty', 'total_time_elapsed')
         return render_to_response('judge/contest/contest_ranking.html', { 'contest': contest, 'ranks': ranks }, context_instance=RequestContext(request) )
 
 

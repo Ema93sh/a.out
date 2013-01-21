@@ -41,8 +41,8 @@ public:
    }
    JobCompiler( string jid )
    {
-      path = "/home/vinith/GIT/a.out/";
-      //path="/Learning/Projects/GIT/a.out/";
+      // path = "/home/vinith/GIT/a.out/";
+      path="/Learning/Projects/GIT/a.out/";
       jobId = jid;
       error = false;
       result = 0;
@@ -137,7 +137,7 @@ public:
       string final ="";
       sampleInputPath = path + "data/" + sampleInputPath;
       if(isCompiled)
-        final = strtimeLimit+string(" environment/./executable ") + "< " + sampleInputPath + " > " + "environment/output"; 
+        final = string(" environment/./executable ") + "< " + sampleInputPath + " > " + "environment/output"; 
       else
         final = strtimeLimit + compileParam + " " +  sourcePath + " < " + sampleInputPath + " > " + "environment/output";   
       cout << "running: " << final << endl;
