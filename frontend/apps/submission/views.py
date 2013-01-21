@@ -71,7 +71,7 @@ def downloadSubmission( request, submission_id ):
                 return HttpResponseForbidden("You do not have permission to view this link")
         filename = submission.user.username + "_" + submission.problem.code +"_" + str(submission.id)
         response = HttpResponse( submission.userCode, content_type="text/plain" )
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename+str(submission.language.extension)
         return response
 
 

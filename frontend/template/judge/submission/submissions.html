@@ -25,10 +25,10 @@
 	<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
          <thead>
 		 <tr>
-                        <th>sub id</th>
+                        <th>Sub id</th>
 			 <th>Code</th>
-			 <th>Title</th>
-			 <th>time</th>
+			 <th>Language</th>
+			 <th>Time</th>
 			 <th>Result</th>
 		 </tr>
 	 </thead>
@@ -41,7 +41,7 @@
                         {% else %}
                         <td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
                         {% endif %}
-			 <td>{{ submission.problem.title }}</td>
+			 <td>{{ submission.language.name }}</td>
 			 <td>{{ submission.time }}</td>
 			 <td>{{ submission.status }}</td>
 		 </tr>
