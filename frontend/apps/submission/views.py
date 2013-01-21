@@ -23,7 +23,7 @@ def get_recent_activity():
 
 class submissionListView( ListView ):
         model = Submission
-        template_name = 'judge/submissions.html'
+        template_name = 'judge/submission/submissions.html'
         context_object_name = 'submissions'
         paginate_by = 10
 
@@ -49,15 +49,24 @@ class submissionListView( ListView ):
 
 def viewSubmission( request, submission_id ):
 	submission = get_object_or_404( Submission, pk=submission_id )
-	if not submission.problem.solutionVisible and submission.user != request.user:
-		return HttpResponseForbidden("You do not have permission to view this link")
+	if submission.contest:
+           if submission.contest.isActive() and submission.user != request.user:
+              return HttpResponseForbidden("You do not have permission to view this link")
+        
+        if not submission.problem.solutionVisible and submission.user != request.user:
+           return HttpResponseForbidden("You do not have permission to view this link")
+	
 	fileHandle = open( submission.userCode.path, 'r+' )
 	code = fileHandle.read()
 	syntax = str(submission.language.name).lower()
-	return render_to_response( 'judge/view_solution.html',  { 'code': code, 'submission': submission, 'syntax': syntax, 'style': 'manni', 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request))
+	return render_to_response( 'judge/submission/view_solution.html',  { 'code': code, 'submission': submission, 'syntax': syntax, 'style': 'manni', 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request))
 
+@login_required
 def downloadSubmission( request, submission_id ):
         submission = get_object_or_404( Submission, pk=submission_id )
+        if submission.contest:
+           if submission.contest.isActive() and submission.user != request.user:
+              return HttpResponseForbidden("You do not have permission to view this link")
         if not submission.problem.solutionVisible and submission.user != request.user:
                 return HttpResponseForbidden("You do not have permission to view this link")
         filename = submission.user.username + "_" + submission.problem.code +"_" + str(submission.id)

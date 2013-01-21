@@ -41,8 +41,8 @@ public:
    }
    JobCompiler( string jid )
    {
-      //path = "/home/vinith/GIT/a.out/";
-      path="/Learning/Projects/GIT/a.out/";
+      path = "/home/vinith/GIT/a.out/";
+      //path="/Learning/Projects/GIT/a.out/";
       jobId = jid;
       error = false;
       result = 0;

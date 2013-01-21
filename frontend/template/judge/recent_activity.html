@@ -9,8 +9,8 @@
 	<tbody>
 	{% for submission in recent_activity %}
 		<tr>
-                        {% if submission.contest_id %}
-			<td><a href="/{{ submission.contest_id }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+                        {% if submission.contest %}
+			<td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
 			{% else %}
 			<td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
 			{% endif %}
