@@ -1,4 +1,3 @@
-from tinymce.models import HTMLField
 from apps.djangoratings.fields import RatingField
 from django.db import models
 from django.contrib.auth.models import User
@@ -7,11 +6,11 @@ from pygments.lexers import get_all_lexers
 
 CHOICE=[(1,'compiled'),(0,'intrepreted')]
 
-syntaxes = [lexer[0] for lexer in get_all_lexers()]
+syntaxes = []
 
 for lexer in get_all_lexers():
 	lex = ( str(lexer[0]).lower(), lexer[0] )
-	syntaxes.append( lexer )
+	syntaxes.append( lex )
 
 class Language( models.Model ):
 
@@ -23,15 +22,18 @@ class Language( models.Model ):
 	compiler = models.CharField( max_length=10 )
 	langType = models.BooleanField("Language type",choices=CHOICE)
 	compileParam = models.CharField( "Compile Parameters", max_length=30, null = True, blank = True);
-	#syntax = models.CharField( max_length=20, choices= syntaxes )
+	syntax = models.CharField( max_length=20, choices= syntaxes )
 	class Meta:
 		db_table = 'language'
 
-def problem_input_file_name( instance, filename):
-	return '/'.join(['problems', instance.code, 'input'])
+class TestCase( models.Model ):
 
-def problem_output_file_name( instance, filename):
-	return '/'.join(['problems', instance.code, 'output'])
+	description = models.CharField( max_length=30 )
+	input = models.FileField( 'Input', upload_to = 'dummy_field' )
+	output = models.FileField( 'Output', upload_to = 'dummy_field')
+	problem = models.ForeignKey( 'Problem' )
+	class Meta:
+		db_table = 'testcase'
 
 class Problem( models.Model ):
 	
@@ -41,8 +43,6 @@ class Problem( models.Model ):
 	code = models.CharField( 'CODE', max_length=10, unique = True )
 	title = models.CharField( 'Title', max_length=30 )
 	description = models.TextField( 'Description')
-	inputFile = models.FileField( 'Sample Input', upload_to = problem_input_file_name)
-	outputFile = models.FileField( 'Sample Output', upload_to = problem_output_file_name)
 	isVisible = models.BooleanField('Visible in Practice mode')
 	solutionVisible = models.BooleanField('Solution Visible')
 	dateAdded = models.DateField( 'Date Added', auto_now_add = True )

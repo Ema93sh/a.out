@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include<fstream>
+#include <fstream>
 #include <map>
 #include "database.h"
 

@@ -2,9 +2,6 @@ from apps.contest.models import *
 from apps.practice.models import *
 from django.contrib.auth.models import User
 
-def submission_file_name(instance, filename):
-            return '/'.join(['submissions', instance.user.username, instance.problem.code, filename ])
-
 class Submission( models.Model ):
 
         def __unicode__(self):
@@ -25,7 +22,7 @@ class Submission( models.Model ):
         status = models.CharField( max_length=3, default="WAI", choices=STATUS_CODE)
         time = models.FloatField('Time Elapsed', null = True)
         memory = models.FloatField('Memory Used', null = True)
-        userCode = models.FileField('User Program', upload_to = submission_file_name )
+        userCode = models.FileField('User Program', upload_to = 'not_required' )
         contest = models.ForeignKey( Contest , null = True)
         class Meta:
                 db_table = 'submissions'

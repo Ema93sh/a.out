@@ -61,6 +61,10 @@ MEDIA_URL = 'http://localhost/data/'
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/account/login"
 
+
+#used by database_file app
+DEFAULT_FILE_STORAGE = 'apps.database_files.storage.DatabaseStorage'
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
@@ -147,6 +151,7 @@ INSTALLED_APPS = (
     'apps.author',
     'tinymce',
     'apps.syntax_highlight',
+    'apps.database_files',
 )
 
 # A sample logging configuration. The only tangible logging

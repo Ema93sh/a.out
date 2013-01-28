@@ -1,7 +1,9 @@
 from models import *
 from apps.practice.models import *
 from apps.contest.models import *
+from apps.database_files.models import *
 
+import os
 from django.http import HttpResponseForbidden, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -56,8 +58,7 @@ def viewSubmission( request, submission_id ):
         if not submission.problem.solutionVisible and submission.user != request.user:
            return HttpResponseForbidden("You do not have permission to view this link")
 	
-	fileHandle = open( submission.userCode.path, 'r+' )
-	code = fileHandle.read()
+	code = submission.userCode.read()
 	syntax = str(submission.language.name).lower()
 	return render_to_response( 'judge/submission/view_solution.html',  { 'code': code, 'submission': submission, 'syntax': syntax, 'style': 'manni', 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request))
 
@@ -70,7 +71,8 @@ def downloadSubmission( request, submission_id ):
         if not submission.problem.solutionVisible and submission.user != request.user:
                 return HttpResponseForbidden("You do not have permission to view this link")
         filename = submission.user.username + "_" + submission.problem.code +"_" + str(submission.id)
-        response = HttpResponse( submission.userCode, content_type="text/plain" )
+	code = submission.userCode.read()
+	response = HttpResponse( code , content_type="text/plain" )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename+str(submission.language.extension)
         return response
 

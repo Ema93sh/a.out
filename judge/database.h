@@ -84,6 +84,11 @@ class Database
 			return num_fields;
 		}
 
+		int noOfRows()
+		{
+			return mysql_num_rows(result);
+		}
+
 		MYSQL_ROW getRow()
 		{
 			return mysql_fetch_row(result);
