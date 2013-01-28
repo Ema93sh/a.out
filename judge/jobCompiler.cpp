@@ -32,13 +32,19 @@ class JobCompiler
 			db.connect();
 		}
 
+		 string stringBuilder(string path){
+			 ifstream fin(path.c_str());
+			 string ret="",s;
+			 while(fin>>s)ret+=s+" ";
+			 fin.close();
+			 return ret;
+		 }
 
 		void doWork()
 		{
 			checkType();
 			compileIt();
 			runIt();
-			checkOutput();
 			updateResult();
 		}
 
@@ -153,12 +159,11 @@ class JobCompiler
 			out << "SELECT content FROM database_files_file WHERE id IN ( ";
 			for( int i = 0; i < noOfTestCases; i++)
 			{
-				cout << "TestCase "<< i <<":"<< endl;
-				cout << "i:" << fileIds[i][0] << " "
-				     << "o:" << fileIds[i][1] << endl;
+				//cout << "TestCase "<< i <<":"<< endl;
+				//cout << "i:" << fileIds[i][0] << " "
+				//     << "o:" << fileIds[i][1] << endl;
 				out << fileIds[i][0] << ", " << fileIds[i][1] << ", "; 
 			}
-			cout << out.str() << endl;
 			str = out.str();
 			unsigned found = str.find_last_of(",");
 			str[found] = ' ';
@@ -176,9 +181,9 @@ class JobCompiler
 				c.assign( row[0] );
 				c = base64_decode(c);
 				out.str( string() );
-				out << "environment/input" << i;
+				//out << "environment/input" << i;
 				filename = out.str();
-				cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
+				//cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
 				ofstream file( filename.c_str() );
 				file << c;
 				file.close();
@@ -188,9 +193,9 @@ class JobCompiler
 				c.assign( row[0] );
 				c = base64_decode(c);
 				out.str( string() );
-				out << "environment/output" << i;
+				//out << "environment/output" << i;
 				filename = out.str();
-				cout << "Creating file " << filename << " with contents"<< endl << c << endl;
+				//cout << "Creating file " << filename << " with contents"<< endl << c << endl;
 				file.open( filename.c_str() );
 				file << c;
 				file.close();
@@ -208,16 +213,21 @@ class JobCompiler
 				out.str( string() );
 				out << "environment/input" << i;
 				string input = out.str();
+				
+				out.str( string() );
+				out << "environment/output" << i;
+				string output = out.str();
+				
 				out.str( string() );
 				out << "environment/user_output" << i;
-				string output = out.str();
+				string user_output = out.str();
       				
 				if(isCompiled)
-      			 	 final = string(" environment/./executable ") + "< " + input + " > " + output;
+      			 	 final = string(" environment/./executable ") + "< " + input + " > " + user_output;
      				else
-      				  final = strtimeLimit + compileParam + " " +  sourcePath + " < " + input + " > " + output;
+      				  final = strtimeLimit + compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
     				 
-				cout << "running testCase " << i+1 << ": " << final << endl;
+				cout << "Running TestCase " << i+1 << ": " << final << endl;
 
 				//start timer
 				gettimeofday(&begin, NULL);
@@ -235,18 +245,82 @@ class JobCompiler
          			else
            			 result=2;
 				}
+
+				cout<< "Checking output.." << endl;
+				checkOutput(  output , user_output );
+				cout << endl << endl;
 			}
 		}
 
-		void checkOutput()
+		void checkOutput(string output, string user_output)
 		{
-
+			if(error) return;
+     			 cout << "Sample Output:" << output << endl; 
+     			 string judgeOp=stringBuilder(output);
+     			 cout << "User Output:" << user_output << endl;
+     			 string userOP=stringBuilder(user_output);
+    			 if(judgeOp.compare(userOP)!=0)
+			 {
+				result=4;
+				error = true;
+				cout << "Failed" << endl;
+			 }
+     			 else 
+			 {
+				 result=5;
+				 cout << "Success" << endl;
+			 }
 		}
 
 		void updateResult()
 		{
-
+			string result = getResult();
+			string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
+			cout << "Update: " << query <<  endl;
+			db.simpleQuery(query);
 		}
+		
+		int getResultCode()
+		{
+     	 		return result;
+  		 }
+   
+  		 string getResult()
+  		 {
+			 string strResult;
+ 		     switch( result )
+ 		     {
+ 		      	 case 0:
+        		    strResult =  "ERR";
+           		 break;
+
+        		case 1:
+           		    strResult = "CTE";
+            		break;
+
+        		case 2:
+           		 strResult = "RTE";
+           		break;
+         		
+			case 3:
+           		 strResult="TLE";
+           		break;
+        		
+			case 4:
+           		 strResult = "WRA";
+           		break;
+         	
+			case 5:
+            		    strResult="ACC";
+           		break;
+        		
+			default:
+           			 strResult = "ERR";
+     		 }
+
+      			return strResult;
+   		}
+	
 };
 
 int main(int argc, char *argv[])
