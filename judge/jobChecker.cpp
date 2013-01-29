@@ -33,7 +33,6 @@ int main()
              system("g++ jobCompiler.cpp base64.o `mysql_config --cflags --libs` -o jobCompiler "); // need to remove this later
              sprintf(st,"./jobCompiler %s",subId.c_str());
              system(st);
-             db.simpleQuery(string("DELETE FROM jobQueue WHERE submission_id="+subId));
 	   }
 
       db.freeResult();
