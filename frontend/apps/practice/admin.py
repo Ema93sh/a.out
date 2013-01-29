@@ -11,7 +11,7 @@ class ProblemAdmin(admin.ModelAdmin):
 	list_filter = ( 'dateAdded', 'isVisible', 'languages')
 	list_editable = ( 'isVisible', 'solutionVisible')
 	filter_horizontal = ( 'author', 'languages' )
-	fields = ( 'code', 'title', 'description',  'sourceLimit', 'timeLimit', 'memoryLimit', 'isVisible', 'author', 'languages', 'solutionVisible')
+	fields = ( 'code', 'title', 'description',  'sourceLimit', 'timeLimit', 'memoryLimit', 'decimalJudgeOn','absoluteError', 'isVisible','solutionVisible', 'author', 'languages')
 	form = ProblemForm
 	inlines = [TestCasesInline]
 
