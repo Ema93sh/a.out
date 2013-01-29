@@ -278,6 +278,7 @@ class JobCompiler
 			string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
 			cout << "Update: " << query <<  endl;
 			db.simpleQuery(query);
+		        db.simpleQuery(string("DELETE FROM jobQueue WHERE submission_id="+submissionId));
 		}
 		
 		int getResultCode()
