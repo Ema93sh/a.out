@@ -22,9 +22,10 @@ class Submission( models.Model ):
         status = models.CharField( max_length=3, default="WAI", choices=STATUS_CODE)
         time = models.FloatField('Time Elapsed', null = True)
         memory = models.FloatField('Memory Used', null = True)
-        userCode = models.FileField('User Program', upload_to = 'not_required' )
+        userCode = models.FileField('User Program', upload_to = 'dummy_field' )
         contest = models.ForeignKey( Contest , null = True)
-        class Meta:
+        
+	class Meta:
                 db_table = 'submissions'
 
 class JobQueue( models.Model ):

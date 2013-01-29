@@ -21,7 +21,8 @@
 		<thead>
 			<th>Code</th>
 			<th>Title</th>
-			<th>Global Submissions</th>
+			<th>Submissions</th>
+			<th>Succ</th>
 			{% if solved_problem %}
 			<th>Status</th>
 			{% endif %}
@@ -32,7 +33,31 @@
 			<tr class="gradeA">
 				<td>{{ problem.code }}</td>
 				<td><a href="/contest/{{contest.code}}/problem/{{ problem.code }}/">{{ problem.title }}</a></td>
-				<td>{{ problem.submission_set.count }}</td>
+				{% if problem.id in no_of_submissions %}
+					{% for key, value in no_of_submissions.items %}
+					
+					{% if key == problem.id %}
+					<td>{{value}}</td>
+					{% endif %}
+
+					{% endfor %}
+				{% else %}
+					<td> 0 </td>
+				{% endif %}
+				
+				
+				{% if problem.id in succ_submissions %}
+					{% for key, value in succ_submissions.items %}
+					
+					{% if key == problem.id %}
+					<td>{{value}}</td>
+					{% endif %}
+
+					{% endfor %}
+				{% else %}
+					<td> 0 </td>
+				{% endif %}
+				
 				{% if solved_problem %}
 				{% if problem.id in solved_problem %}
 				<td> Solved </td>

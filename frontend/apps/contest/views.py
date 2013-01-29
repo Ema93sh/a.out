@@ -40,13 +40,29 @@ class contestDetailView( DetailView ):
                 context = super( contestDetailView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
                 if self.request.user.is_authenticated():
-                        solved_problems = [ ]
-                        submissions = Submission.objects.filter( user = self.request.user , contest = self.get_object())
+                        solved_problems = [ 0, ]
+                        no_of_submissions = { }
+			succ_submissions = { }
+
+			contest = self.get_object()
+			for problem in contest.problems.all():
+				submissions = Submission.objects.filter( contest = contest, problem = problem )
+				no_of_submissions[problem.id] = 0
+				succ_submissions[problem.id] = 0
+				for submission in submissions:
+					no_of_submissions[problem.id] += 1 
+					if submission.status == 'ACC':
+						succ_submissions[problem.id] += 1
+
+			submissions = Submission.objects.filter( user = self.request.user , contest = self.get_object())
                         for submission in submissions:
                                 if submission.status == 'ACC':
-                                        if submission.problem.id not in solved_problems:
+					if submission.problem.id not in solved_problems:
                                                 solved_problems.append( submission.problem.id )
-                        context['solved_problem'] = solved_problems
+                      	print( no_of_submissions ) 
+			context['succ_submissions'] = succ_submissions
+			context['no_of_submissions'] = no_of_submissions
+			context['solved_problem'] = solved_problems
                 return context
 
 class problemDetailView( DetailView ):

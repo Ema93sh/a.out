@@ -30,7 +30,7 @@ int main()
              subId.assign(row[0]);
              char st[200];
              cout<< "Judging submission id:" << subId << endl;
-             system("g++ job_compiler.cpp `mysql_config --cflags --libs` -o jobCompiler"); // need to remove this later
+             system("g++ jobCompiler.cpp base64.o `mysql_config --cflags --libs` -o jobCompiler "); // need to remove this later
              sprintf(st,"./jobCompiler %s",subId.c_str());
              system(st);
              db.simpleQuery(string("DELETE FROM jobQueue WHERE submission_id="+subId));

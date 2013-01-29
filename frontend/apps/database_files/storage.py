@@ -13,7 +13,7 @@ class DatabaseStorage(Storage):
         """
         dir_name, file_name = os.path.split(name)
         file_root, file_ext = os.path.splitext(file_name)
-        return '%s%s' % (pk, file_ext)
+        return '%s' % (pk)
     
     def _open(self, name, mode='rb'):
         try:
