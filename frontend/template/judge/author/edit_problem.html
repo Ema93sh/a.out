@@ -7,6 +7,9 @@
 <li><a href="/practice">Practice</a></li>
 {% endblock %}
 
+{% block head %}
+<script type="text/javascript" language="javascript" src="http://datatables.net/release-datatables/media/js/jquery.js"></script>
+{% endblock %}
 
 {% block content %}
 <h2 class="title"><a href="{{ request.path }}">Author - Edit Problem - {{ problem.title }}</a></h2>
@@ -15,7 +18,41 @@
 		{% csrf_token %}
 		{{ form.media }}
 		{{ form.as_p }}
+		<h3>add new test cases </h3>
+		<div id="form_set">
+		<table>
+		{{ testCase }}
+		{{ tformset.management_form }}
+		{% for form in tformset %}
+		{{ form }}
+		{% endfor %}
+		</table>
+		</div>
+		<input type="button" value="Add another test file" id="add_more">
+		<div id="empty_form" style="display:none">
+		<table class='no_error'>
+		{{ tformset.empty_form.as_table }}
+		</table>
+		</div>
+		<script>
+		$('#add_more').click(function() {
+                   var form_idx = $('#id_form-TOTAL_FORMS').val();
+                   //alert(form_idx);
+                   var newelem=$('#empty_form').html();
+                   $('#form_set').append(newelem.replace(/__prefix__/g, form_idx));
+                   $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+                });
+                </script>
+                <br>
 		<input type="submit" value="Save">
+	</form>
+	<form method="POST"  enctype="multipart/form-data" action="{{ request.path }}">
+	<h3> current testcase </h3>
+	{% for pk in testcase %}
+	<a href="/author/problem/edit/{{problem.code}}/delete/{{pk}}"> delete this test file </a><br><br>
+	<a href="/author/problem/edit/{{problem.code}}/download/{{pk}}">inputfile</a><br>
+	<a href="/author/problem/edit/{{problem.code}}/download/{{pk}}">outputfile</a><br><br>
+	{% endfor %}
 	</form>
 
 </div>

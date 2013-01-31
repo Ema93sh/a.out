@@ -34,6 +34,10 @@ class TestCase( models.Model ):
 	problem = models.ForeignKey( 'Problem' )
 	class Meta:
 		db_table = 'testcase'
+        @classmethod
+        def create(cls, ip,op,prob):
+            testcaseobj = cls(input=ip,output=op,problem=prob)
+            return testcaseobj
 
 class Problem( models.Model ):
 	

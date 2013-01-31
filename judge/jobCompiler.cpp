@@ -327,6 +327,7 @@ public:
       string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
+      system("rm -r environment/*");
    }
 
    
