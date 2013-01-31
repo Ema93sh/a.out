@@ -25,8 +25,8 @@ private:
 public:
    JobCompiler( string subid ): db()
    {
-      //path = "/Learning/Projects/GIT/a.out/";
-      path = "/home/vinith/GIT/a.out/";
+      path = "/Learning/Projects/GIT/a.out/";
+      //path = "/home/vinith/GIT/a.out/";
       submissionId = subid;
       result = 0;
       error = false;
@@ -200,7 +200,7 @@ public:
          c.assign( row[0] );
          c = base64_decode(c);
          out.str( string() );
-         //out << "environment/input" << i;
+         out << "environment/input" << i;
          filename = out.str();
          //cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
          ofstream file( filename.c_str() );
@@ -212,7 +212,7 @@ public:
          c.assign( row[0] );
          c = base64_decode(c);
          out.str( string() );
-         //out << "environment/output" << i;
+         out << "environment/output" << i;
          filename = out.str();
          //cout << "Creating file " << filename << " with contents"<< endl << c << endl;
          file.open( filename.c_str() );
@@ -328,6 +328,7 @@ public:
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
    }
+
    
    int getResultCode()
    {
