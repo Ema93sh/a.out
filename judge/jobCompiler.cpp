@@ -200,7 +200,7 @@ public:
          c.assign( row[0] );
          c = base64_decode(c);
          out.str( string() );
-         //out << "environment/input" << i;
+         out << "environment/input" << i;
          filename = out.str();
          //cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
          ofstream file( filename.c_str() );
@@ -212,7 +212,7 @@ public:
          c.assign( row[0] );
          c = base64_decode(c);
          out.str( string() );
-         //out << "environment/output" << i;
+         out << "environment/output" << i;
          filename = out.str();
          //cout << "Creating file " << filename << " with contents"<< endl << c << endl;
          file.open( filename.c_str() );
@@ -327,6 +327,7 @@ public:
       string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
+      system("rm -r environment/*");
    }
    
    int getResultCode()
