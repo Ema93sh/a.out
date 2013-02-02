@@ -14,7 +14,13 @@ from datetime import timedelta
 from django.http import Http404
 
 def get_recent_activity():
-	        return Submission.objects.order_by('-date')[:10]
+	return Submission.objects.order_by('-date')[:10]
+
+def get_recent_contest_activity(contest):
+	return Submission.objects.filter( contest = contest ).order_by('-date')[:10]
+
+def get_problem_activity( problem ):
+	return Submission.objects.filter( problem = problem ).order_by('-date')[:10]
 
 class contestListView( ListView ):
         model = Contest
@@ -25,7 +31,8 @@ class contestListView( ListView ):
                 # Call the base implementation first to get a context
                 context = super( contestListView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
-                context['past_contest'] = Contest.objects.filter( endTime__lt = timezone.now() )
+                context['contest_recent_activity'] = get_recent_contest_activity( contest = self.get_object())
+	        context['past_contest'] = Contest.objects.filter( endTime__lt = timezone.now() )
                 context['future_contest'] = Contest.objects.filter( startTime__gt = timezone.now() )
                 return context
 
@@ -39,6 +46,7 @@ class contestDetailView( DetailView ):
                 # Call the base implementation first to get a context
                 context = super( contestDetailView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
+                context['contest_recent_activity'] = get_recent_contest_activity( contest = self.get_object() )
                 if self.request.user.is_authenticated():
                         solved_problems = [ 0, ]
                         no_of_submissions = { }
@@ -74,8 +82,11 @@ class problemDetailView( DetailView ):
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
 		context = super(problemDetailView, self).get_context_data(**kwargs)
+	        contest = Contest.objects.get( code = self.kwargs['contest_code'] )
+                context['problem_activity'] = get_problem_activity( problem = self.get_object() )
+		context['contest_recent_activity'] = get_recent_contest_activity( contest = contest)
 		context['recent_activity'] = get_recent_activity()
-		context['contest'] = Contest.objects.get( code = self.kwargs['contest_code'] )
+		context['contest'] = contest
 		return context
 
 

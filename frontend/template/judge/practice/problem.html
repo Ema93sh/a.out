@@ -88,7 +88,7 @@
 {% for comment in problem.comment_set.all %}
 <div class="comments">
 	<div class="author">
-		{{ comment.author }}
+		<a href="/account/{{comment.author.username}}/">{{ comment.author }}:</a>
 	</div>
 	<div class="data">
 		{{ comment.data }}
@@ -100,8 +100,7 @@
 Add Comment:
 <form method="post" action="/practice/problem/{{ problem.code }}/comment/add">
 	{% csrf_token %}
-	<textarea rows=7 name="comment">
-	</textarea>
+	<textarea rows="5" cols="20" name="comment"></textarea>
 	<br>
 	<input type="hidden" name="next" value="{{ request.path }}" >
 	<input type="submit" value="Add">
@@ -111,7 +110,12 @@ Add Comment:
 
 
 {% block sidebar %}
-<h2> Best Solutions </h2>
+
+{% if problem_activity.count > 0 %}
+<h2> Problem Activity</h2>
+{% include 'judge/problem_activity.html' %}
+{% endif %}
+
 <h2> Recent Activity</h2>
 {% include 'judge/recent_activity.html' %}
 {% endblock %}

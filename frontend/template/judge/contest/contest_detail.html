@@ -73,7 +73,12 @@
 {% endblock %}
 
 {% block sidebar %}
-<h2> Best Solutions </h2>
+
+{% if contest_recent_activity.count > 0 %}
+<h2> Contest Activity</h2>
+{% include 'judge/contest/contest_recent_activity.html' %}
+{% endif %}
+
 <h2> Recent Activity</h2>
 {% include 'judge/recent_activity.html' %}
 {% endblock %}

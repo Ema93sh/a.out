@@ -14,6 +14,9 @@ from django.http import Http404
 def get_recent_activity():
 	return Submission.objects.order_by('-date')[:10]
 
+def get_problem_activity( problem ):
+        return Submission.objects.filter( problem = problem ).order_by('-date')[:10]
+
 class problemDetailView( DetailView ):
 	model = Problem
 	context_object_name = 'problem'
@@ -24,6 +27,7 @@ class problemDetailView( DetailView ):
 		# Call the base implementation first to get a context
 		context = super(problemDetailView, self).get_context_data(**kwargs)
 		context['recent_activity'] = get_recent_activity()
+                context['problem_activity'] = get_problem_activity( problem = self.get_object() )
 		return context
 
 

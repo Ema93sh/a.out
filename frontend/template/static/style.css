@@ -465,7 +465,8 @@ nav .current_page_item a
 	margin: 2px;
 	padding: 2px;
 	font-size: 20px;
-	color: black;
+	color: green;
+	text-transform: uppercase;
 }
 
 .comments .data
@@ -473,8 +474,7 @@ nav .current_page_item a
 	width: 100%;
 	height: 100%;
 	padding: 10px 25px;
-	font-size: 25px;
-	font-size: 12px;
+	font-size: 13px;
 	color: black;
 }
 
