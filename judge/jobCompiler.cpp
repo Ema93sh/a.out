@@ -244,7 +244,7 @@ public:
          if(isCompiled)
             final = string(" environment/./executable ") + "< " + input + " > " + user_output;
          else
-            final = strtimeLimit + compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
+            final =  compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
          
          cout << "Running TestCase " << i+1 << ": " << final << endl;
          
@@ -255,7 +255,8 @@ public:
          //end timer
          result=WEXITSTATUS(ret);
          timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
-         cout<<"timeElapsed: "<<timeElapsed<<endl;
+         cout << "t:" << end.tv_sec << endl;
+	 cout<<"timeElapsed: "<<timeElapsed<<endl;
          if(result!=0)
          {
             error=true;
@@ -327,7 +328,7 @@ public:
       string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
-      system("rm -r environment/*");
+ //     system("rm -r environment/*");
    }
 
    

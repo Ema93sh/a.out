@@ -17,6 +17,7 @@ class Contest( models.Model ):
         users = models.ManyToManyField( User , blank = True)
         penalty_submission = models.BooleanField( 'Penalty for Wrong submission' )
 	ranking_update = models.DateTimeField( null = True)
+	registration_end_time = models.DateTimeField()
 
         def isActive( self ):
                 if self.startTime <= timezone.now() <= self.endTime:
@@ -26,6 +27,11 @@ class Contest( models.Model ):
         isActive.boolean = True
         isActive.short_description = 'Is contest Active?'
 
+	def  registrationEnded( self ):
+		if self.registration_end_time <= timezone.now():
+			return True
+		else:
+			return False
         class Meta:
                 db_table = 'contest'
                 ordering = ['-startTime']

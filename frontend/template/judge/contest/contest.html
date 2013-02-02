@@ -48,7 +48,13 @@
 			{% if request.user in contest.users.all %}
 			<td>Registered</td>
 			{% else %}
+			
+			{% if not  reguest.contest.registrationEnded %}
+			<td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
+			{% else %}
 			<td>Not Registered</td>
+			{% endif %}
+
 			{% endif %}
 		</tr>
 		{% endif %}

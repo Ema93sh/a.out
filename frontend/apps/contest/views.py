@@ -98,16 +98,15 @@ def calculateScore( user, contest ):
                                         penalty += (60 * 20 )
                 if total_time < problem_submission_time:
                         total_time = problem_submission_time
-
-        rank = Ranking.objects.get( contest = contest, user = user )
+	
+	try:
+		rank = Ranking.objects.get( contest = contest, user = user )
+	except Ranking.DoesNotExist:
+		rank = Ranking( contest = contest, user = user )
         total_time_seconds = total_time.total_seconds()
-
-        if not rank:
-		rank = Ranking( contest = contest, user = user, score = score, penalty = penalty, total_time_elapsed = total_time_seconds + penalty )
-        else:
-                rank.score = score
-                rank.penalty = penalty
-                rank.total_time_elapsed = total_time_seconds + penalty  #add 20 mins for each penalty
+	rank.score = score
+	rank.penalty = penalty
+	rank.total_time_elapsed = total_time_seconds + penalty  #add 20 mins for each penalty
         rank.save()
 
         print("Score:" + str(rank.score))
@@ -115,7 +114,7 @@ def calculateScore( user, contest ):
         print("total_time:" + str(rank.total_time_elapsed))
 
 def calculateAllScores( contest ):
-        for user in contest.users.all():
+	for user in contest.users.all():
                 calculateScore( user, contest )
 	contest.ranking_update = timezone.now()
 	contest.save()
@@ -135,12 +134,14 @@ def ranking( request, contest_code ):
 @login_required
 def register( request, contest_code ):
         contest = get_object_or_404( Contest, code = contest_code )
-        if contest.startTime > timezone.now():
+        if contest.registration_end_time > timezone.now():
                 if request.user not in contest.users.all():
                         contest.users.add( request.user )
                         rank = Ranking( contest = contest, user = request.user )
                         contest.save()
                         rank.save()
+		else:
+			return HttpResponse("User already registered")
         return redirect('/contest')
 
 @login_required
