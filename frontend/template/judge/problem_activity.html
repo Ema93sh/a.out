@@ -1,0 +1,23 @@
+<table id="hor-minimalist-b">
+	<thead>
+	<tr>
+		<th>Code</th>
+		<th>Username</th>
+		<th>Result</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for submission in problem_activity %}
+		<tr>
+                        {% if submission.contest %}
+			<td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+			{% else %}
+			<td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+			{% endif %}
+			<td><a href="/account/{{ submission.user.username }}/">{{ submission.user.username }}</a></td>
+			<td>{{ submission.status }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+

@@ -1,0 +1,19 @@
+<table id="hor-minimalist-b">
+	<thead>
+	<tr>
+		<th>Code</th>
+		<th>Username</th>
+		<th>Result</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for submission in contest_recent_activity %}
+		<tr>
+			<td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+			<td><a href="/account/{{ submission.user.username }}/">{{ submission.user.username }}</a></td>
+			<td>{{ submission.status }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
