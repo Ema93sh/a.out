@@ -49,7 +49,7 @@
 			<td>Registered</td>
 			{% else %}
 			
-			{% if not  reguest.contest.registrationEnded %}
+			{% if not  contest.registrationEnded %}
 			<td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
 			{% else %}
 			<td>Not Registered</td>
@@ -85,7 +85,11 @@
 			{% if request.user in contest.users.all %}
 			<td>registered</td>
 			{% else %}
-			<td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
+				{% if not contest.registrationEnded %} 
+				   <td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
+				{% else %}
+				   <td>Registration Ended</td>
+				{% endif %}
 			{% endif %}
 		</tr>
 		{% endfor %}
