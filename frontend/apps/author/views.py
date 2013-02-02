@@ -29,7 +29,6 @@ def authorProblemsView( request ):
 
 @login_required
 def addProblem( request ):
-        TestCaseFormSet = formset_factory(TestCaseForm,extra=2)
         if request.method =='POST':
                 form = ProblemForm( request.POST , request.FILES)
                 #tformset=TestCaseFormSet(request.POST,request.FILES)
@@ -42,14 +41,13 @@ def addProblem( request ):
                         return redirect('/author/problem/')
         else:
                 form = ProblemForm()
-                tformset= TestCaseFormSet()
+                tformset = formset_factory(TestCaseForm,extra=2)
 
         return render_to_response('judge/author/add_problem.html', {'form': form,'tformset':tformset}, context_instance = RequestContext( request ))
 
 
 @login_required
 def editProblem( request, problem_code ):
-        TestCaseFormSet = formset_factory(TestCaseForm)
         problem = get_object_or_404( Problem, code = problem_code )
         testcase= TestCase.objects.filter(problem=problem)
         curr=len(testcase)
@@ -64,7 +62,7 @@ def editProblem( request, problem_code ):
                         return redirect('/author/problem/')
         else:
                 form = ProblemForm( instance = problem )
-                tformset= TestCaseFormSet()
+                tformset=formset_factory(TestCaseForm)
         return render_to_response('judge/author/edit_problem.html', {'form': form, 'problem' : problem,'tformset':tformset,'testcase':tcdic}, context_instance = RequestContext( request ))
 @login_required
 def deleteTestFiles(request,problem_code,testcase_id):

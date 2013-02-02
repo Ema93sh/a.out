@@ -8,16 +8,15 @@
 {% endblock %}
 
 {% block head %}
-<script type="text/javascript" language="javascript" src="http://datatables.net/release-datatables/media/js/jquery.js"></script>
-<script type="text/javascript" language="javascript" src="http://datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/jquery.dataTables.js"></script>
 <script>
 	$(document).ready(function(){
 		    // Initalize DataTables on <table> tag with id="example"
 			        $('#example').dataTable();  
 			});
 </script>
-
-<link type="text/css" rel="stylesheet" href="http://www.datatables.net/release-datatables/media/css/demo_table.css">
+<link type="text/css" rel="stylesheet" href="/static/demo_table.css">
 {% endblock %}
 
 {% block content %}
