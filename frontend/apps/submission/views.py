@@ -33,12 +33,18 @@ class submissionListView( ListView ):
                 # Call the base implementation first to get a context
                 context = super( submissionListView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
-	       	return context
+		if 'user_name' in self.kwargs:
+			context['user_name'] = self.kwargs['user_name']
+		if 'contest_code' in self.kwargs:
+			context['contest_code'] = self.kwargs['contest_code']
+		if 'problem_code' in self.kwargs:
+	       		context['problem_code'] = self.kwargs['problem_code']
+		return context
 
         def get_queryset( self ):
 		queryset = Submission.objects.all()
-		if 'username' in self.kwargs:
-			user = get_object_or_404( User, username = self.kwargs['username'] )
+		if 'user_name' in self.kwargs:
+			user = get_object_or_404( User, username = self.kwargs['user_name'] )
 			queryset = queryset.filter( user = user )
 		if 'contest_code' in self.kwargs:
 			contest = get_object_or_404( Contest, code = self.kwargs['contest_code'] )

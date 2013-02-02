@@ -81,7 +81,10 @@
 </div>
 {% endblock %}
 
+
 {% block sidebar %}
+
+<h2><a href="/submission/contest/{{ contest.code }}/{{ request.user }}/{{ problem.code }}/">My Submission</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/submission/contest/{{contest.code}}/problem/{{ problem.code}}"> All Submission</a></h2>
 {% if problem_activity.count > 0 %}
 <h2> Problem Activity</h2>
 {% include 'judge/problem_activity.html' %}
