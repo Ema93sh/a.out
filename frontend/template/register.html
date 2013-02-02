@@ -1,0 +1,30 @@
+<html>
+	<head>
+		 {% load staticfiles %}
+		 <link type="text/css" rel="stylesheet" href="{% static "style.css" %}" media="screen">
+		 <link href="/static/googlefont.css" rel="stylesheet" type="text/css" />
+		 <title> Project a.out - New user </title>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="menu-wrapper">
+	 		</div>
+			<div id="logo" class="container">
+				<h1><a href="#">A.out</a></h1>
+				<p>Amrita Online Judge</p>
+			</div>
+			<div id="register" class="container">
+			<form method="post" action="{{ request.path }}">
+				{% csrf_token %}
+				{{ msg }}
+				 {{ form.media }}
+				 {{ form.as_p }}
+			  	<input type="submit" value="register" tabindex="4">
+			 </form>
+	 		</div>
+		</div>
+		<div id="footer">
+			<p>Copyright 2013. All rights reserved.</p>
+		</div>
+	</body>
+</html>

@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^contest/', include('apps.contest.urls')),
     url(r'^submission/', include('apps.submission.urls')),
     url(r'^author/', include('apps.author.urls')),
+    url(r'^register/', include('apps.account.urls')),
 
     
     #    url(r'^tinymce/', include('apps.tinymce.urls')),
