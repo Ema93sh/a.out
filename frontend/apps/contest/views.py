@@ -31,7 +31,6 @@ class contestListView( ListView ):
                 # Call the base implementation first to get a context
                 context = super( contestListView, self).get_context_data(**kwargs)
                 context['recent_activity'] = get_recent_activity()
-                context['contest_recent_activity'] = get_recent_contest_activity( contest = self.get_object())
 	        context['past_contest'] = Contest.objects.filter( endTime__lt = timezone.now() )
                 context['future_contest'] = Contest.objects.filter( startTime__gt = timezone.now() )
                 return context
