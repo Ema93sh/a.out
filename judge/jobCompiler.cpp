@@ -30,6 +30,7 @@ public:
       submissionId = subid;
       result = 0;
       error = false;
+      timeElapsed=0.0;
       db.initialize();
       db.connect();
    }
@@ -41,6 +42,14 @@ public:
       while(fin>>s)ret.push_back(s);
       fin.close();
       return ret;
+   }
+   double getTime(){
+     ifstream fin("environment/exectime.txt");
+     string s;
+     fin>>s;
+     cout<<"--------------> "<<s<<endl;
+     fin.close();
+     return atof(s.c_str());
    }
    bool isDecimal(string s){
       int dotcount=0,l=s.length();
@@ -223,9 +232,10 @@ public:
       // run the code
       int ret;
       struct timeval begin, end; //for calculating time elapsed
-      string strtimeLimit="timeout "+timeLimit+"s ";
+      string strtimeLimit="timeout "+timeLimit+"s  ";
       string final ="";
-      
+      string timeCmd="/usr/bin/time -f \"%U\" -o environment/exectime.txt  ";
+      double currtime;
       for( int i=0; i < noOfTestCases; i++ )
       {
          if( error) break;
@@ -242,21 +252,25 @@ public:
          string user_output = out.str();
          
          if(isCompiled)
-            final = string(" environment/./executable ") + "< " + input + " > " + user_output;
+            final = strtimeLimit + timeCmd  +string(" environment/./executable ") + "< " + input + " > " + user_output;
          else
-            final =  compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
+            final = strtimeLimit + timeCmd  +compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
+        
          
+
          cout << "Running TestCase " << i+1 << ": " << final << endl;
-         
          //start timer
-         gettimeofday(&begin, NULL);
+         //gettimeofday(&begin, NULL);
          ret=system(final.c_str());
-         gettimeofday(&end, NULL);
+         //gettimeofday(&end, NULL);
          //end timer
          result=WEXITSTATUS(ret);
-         timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
+
+         //timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
+
          cout << "t:" << end.tv_sec << endl;
 	 cout<<"timeElapsed: "<<timeElapsed<<endl;
+
          if(result!=0)
          {
             error=true;
@@ -264,8 +278,11 @@ public:
                result=3;
             else
                result=2;
+         }else{
+           currtime=getTime();
+           timeElapsed=max(timeElapsed,currtime);
          }
-         
+         cout<<"timeElapsed: "<<timeElapsed<<endl;
          cout<< "Checking output.." << endl;
          checkOutput(  output , user_output );
          cout << endl << endl;
