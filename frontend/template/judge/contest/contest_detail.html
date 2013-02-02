@@ -74,7 +74,9 @@
 
 {% block sidebar %}
 
-<h2><a href="/submission/contest/{{ contest.code }}/{{ request.user}}/">My Submission</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/submission/contest/{{ contest.code }}/">All Submission</a></h2>
+<h2>
+	{% if request.user.is_authenticated %}
+	<a href="/submission/contest/{{ contest.code }}/{{ request.user}}/">My Submission</a>&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}<a href="/submission/contest/{{ contest.code }}/">All Submission</a></h2>
 {% if contest_recent_activity.count > 0 %}
 <h2> Contest Activity</h2>
 {% include 'judge/contest/contest_recent_activity.html' %}
