@@ -176,7 +176,7 @@ def submit( request, problem_code, contest_code ):
 	contest = get_object_or_404( Contest, code = contest_code )
 	if contest.isActive():
 		if request.user not in contest.users.all():
-			raise Http404
+			return HttpResponse("You havnt registered to submit for this contest")
                 if not contest.isActive():
                         return redirect( '/contest/' + contest_code )
 	return render_to_response( 'judge/contest/submit.html', {  'contest': contest, 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )

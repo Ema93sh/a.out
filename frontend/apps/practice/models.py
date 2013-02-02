@@ -62,7 +62,7 @@ class Problem( models.Model ):
 	def success( self ):
 		count = 0
 		for submission in self.submission_set.all():
-			if submission.status == 'ACC':
+			if submission.status == 'ACC' and submission.contest is None:
 				count += 1
 		return count
 
@@ -73,6 +73,12 @@ class Problem( models.Model ):
 				return True
 		return False
 
+	def practiceCount( self ):
+		count = 0
+		for submission in self.submission_set.all():
+			if submission.contest is None:
+				count += 1
+		return count
 	class Meta:
 		db_table = 'problems'
 
