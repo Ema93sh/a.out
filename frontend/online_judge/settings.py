@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'apps.djangoratings',
     'apps.author',
     'tinymce',
+    'apps.account',
     'apps.syntax_highlight',
     'apps.database_files',
 )
