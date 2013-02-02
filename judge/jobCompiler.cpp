@@ -268,8 +268,6 @@ public:
 
          //timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
 
-         cout << "t:" << end.tv_sec << endl;
-	 cout<<"timeElapsed: "<<timeElapsed<<endl;
 
          if(result!=0)
          {

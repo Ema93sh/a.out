@@ -29,6 +29,7 @@ def authorProblemsView( request ):
 
 @login_required
 def addProblem( request ):
+        tformset=formset_factory(TestCaseForm,extra=2)
         if request.method =='POST':
                 form = ProblemForm( request.POST , request.FILES)
                 #tformset=TestCaseFormSet(request.POST,request.FILES)
