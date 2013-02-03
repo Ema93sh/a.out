@@ -1,3 +1,4 @@
+from apps.submission.models import *
 from models import *
 from forms import *
 
@@ -5,6 +6,15 @@ from django.contrib import admin
 
 class TestCasesInline( admin.StackedInline ):
 	model = TestCase
+
+
+def rejudge(modeladmin, request, queryset ):
+	for problem in queryset:
+		for submission in problem.submission_set.all():
+			jq = JobQueue( submission = submission )
+			jq.save()
+
+rejudge.short_description = "Rejudge problem"
 
 class ProblemAdmin(admin.ModelAdmin):
 	list_display = ('code', 'title', 'sourceLimit', 'timeLimit', 'memoryLimit', 'isVisible', 'solutionVisible', )
@@ -14,6 +24,7 @@ class ProblemAdmin(admin.ModelAdmin):
 	fields = ( 'code', 'title', 'description',  'sourceLimit', 'timeLimit', 'memoryLimit', 'decimalJudgeOn','absoluteError', 'isVisible','solutionVisible', 'author', 'languages')
 	form = ProblemForm
 	inlines = [TestCasesInline]
+	actions = [rejudge]
 
 class CommentAdmin(admin.ModelAdmin):
 	list_display = ('author', 'problem', 'data', 'date' )
