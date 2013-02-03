@@ -25,8 +25,8 @@ private:
 public:
    JobCompiler( string subid ): db()
    {
-      path = "/Learning/Projects/GIT/a.out/";
-      //path = "/home/vinith/GIT/a.out/";
+      //path = "/Learning/Projects/GIT/a.out/";
+      path = "/home/vinith/GIT/a.out/";
       submissionId = subid;
       result = 0;
       error = false;

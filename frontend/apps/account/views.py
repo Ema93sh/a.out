@@ -8,7 +8,6 @@ from apps.submission.models import *
 from collections import OrderedDict
 from apps.practice.views import get_recent_activity
 from django.conf import settings
-from recaptcha.client import captcha  
 
 
 def solvedProblems(user):
@@ -47,13 +46,8 @@ def editprofile(request, user_name):
 def registerUser(request):
    msg=''
    if request.method == 'POST':
-      response = captcha.submit(  
-      request.POST.get('recaptcha_challenge_field'),  
-      request.POST.get('recaptcha_response_field'),  
-      settings.RECAPTCHA_PRIVATE_KEY,  
-      request.META['REMOTE_ADDR'],)  
       form = registrationForm( request.POST)
-      if response.is_valid and request.POST['password']==request.POST['confirmPassword']:
+      if form.is_valid() and request.POST['password']==request.POST['confirmPassword']:
          user=User.objects.create_user(request.POST['username'],'',request.POST['password'])
          user.save()
          return redirect( '/')
