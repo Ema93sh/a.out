@@ -42,7 +42,13 @@
                         <td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
                         {% endif %}
 			 <td>{{ submission.language.name }}</td>
+			 {% if submission.time > 0 %}
 			 <td>{{ submission.time }}</td>
+			 {% elif submission.time = 0 %}
+			 <td>0.00</td>
+			 {% else %}
+			 <td>- </td>
+			 {% endif %}
 			 <td>{{ submission.status }}</td>
 		 </tr>
 		{% endfor %}

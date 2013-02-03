@@ -340,7 +340,13 @@ public:
    void updateResult()
    {
       string result = getResult();
-      string query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
+      string query;
+      stringstream sttime;
+      sttime<<timeElapsed;
+      if(result.compare("Accepted")==0)
+        query = "UPDATE submissions SET status =\"" + result +"\" ,time=\""+ sttime.str() +"\" WHERE id =" +submissionId;
+      else  
+       query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
  //     system("rm -r environment/*");
@@ -358,31 +364,31 @@ public:
       switch( result )
       {
          case 0:
-            strResult =  "ERR";
+            strResult =  "System Error";
             break;
             
          case 1:
-            strResult = "CTE";
+            strResult = "Compilation Error";
             break;
             
          case 2:
-            strResult = "RTE";
+            strResult = "Runtime Error";
             break;
             
          case 3:
-            strResult="TLE";
+            strResult="Time Limit Exceeded";
             break;
             
          case 4:
-            strResult = "WRA";
+            strResult = "Wrong Answer";
             break;
             
          case 5:
-            strResult="ACC";
+            strResult="Accepted";
             break;
             
          default:
-            strResult = "ERR";
+            strResult = "System Error";
       }
       
       return strResult;
