@@ -49,7 +49,7 @@
 			 {% else %}
 			 <td>- </td>
 			 {% endif %}
-			 <td>{{ submission.status }}</td>
+			 <td>{{ submission.get_status_display }}</td>
 		 </tr>
 		{% endfor %}
 	<tbody>

@@ -1,7 +1,7 @@
 # Django settings for online_judge project.
 
-ROOT_DIR = "/home/vinith/GIT/a.out/"
-#ROOT_DIR = "/Learning/Projects/GIT/a.out/"
+#ROOT_DIR = "/home/vinith/GIT/a.out/"
+ROOT_DIR = "/Learning/Projects/GIT/a.out/"
 
 RECAPTCHA_PUBLIC_KEY = '6LewetwSAAAAAH8K9kdkJ-kdD83NE6cIhCCRXIpD'
 RECAPTCHA_PRIVATE_KEY = '6LewetwSAAAAAEa1gm9CaOJZ-PloFjBI5DOCpqrP'

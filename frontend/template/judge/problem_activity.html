@@ -15,7 +15,7 @@
 			<td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
 			{% endif %}
 			<td><a href="/account/{{ submission.user.username }}/">{{ submission.user.username }}</a></td>
-			<td>{{ submission.status }}</td>
+			<td>{{ submission.get_status_display }}</td>
 		</tr>
 	{% endfor %}
 	</tbody>

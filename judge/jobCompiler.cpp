@@ -25,8 +25,8 @@ private:
 public:
    JobCompiler( string subid ): db()
    {
-      //path = "/Learning/Projects/GIT/a.out/";
-      path = "/home/vinith/GIT/a.out/";
+      path = "/Learning/Projects/GIT/a.out/";
+      //path = "/home/vinith/GIT/a.out/";
       submissionId = subid;
       result = 0;
       error = false;
@@ -343,7 +343,7 @@ public:
       string query;
       stringstream sttime;
       sttime<<timeElapsed;
-      if(result.compare("Accepted")==0)
+      if(result.compare("ACC")==0)
         query = "UPDATE submissions SET status =\"" + result +"\" ,time=\""+ sttime.str() +"\" WHERE id =" +submissionId;
       else  
        query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
@@ -364,31 +364,31 @@ public:
       switch( result )
       {
          case 0:
-            strResult =  "System Error";
+            strResult =  "ERR";
             break;
             
          case 1:
-            strResult = "Compilation Error";
+            strResult = "CTE";
             break;
             
          case 2:
-            strResult = "Runtime Error";
+            strResult = "RTE";
             break;
             
          case 3:
-            strResult="Time Limit Exceeded";
+            strResult="TLE";
             break;
             
          case 4:
-            strResult = "Wrong Answer";
+            strResult = "WRA";
             break;
             
          case 5:
-            strResult="Accepted";
+            strResult="ACC";
             break;
             
          default:
-            strResult = "System Error";
+            strResult = "ERR";
       }
       
       return strResult;

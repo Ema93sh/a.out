@@ -6,21 +6,21 @@ class Submission( models.Model ):
 
         def __unicode__(self):
                 return self.user.username
-        '''STATUS_CODE  = (
-                        ("ERR", "Internal Error"),
-                        ("WAI", "Waiting"),
-                        ("ACC", "Accpeted"),
-                        ("TLE", "Time Limit Exceeded"),
-                        ("RTE", "Runtime Error"),
-                        ("CTE", "Compile Time Error"),
-                        ("WRA", "Wrong Answer"),
+        STATUS_CODE  = (
+                        ('ERR', 'Internal Error'),
+                        ('WAI', 'Waiting'),
+                        ('ACC', 'Accpeted'),
+                        ('TLE', 'Time Limit Exceeded'),
+                        ('RTE', 'Runtime Error'),
+                        ('CTE', 'Compile Time Error'),
+                        ('WRA', 'Wrong Answer'),
                         )
-                        '''
+
         date = models.DateTimeField( 'Date added', auto_now_add = True )
         user = models.ForeignKey( User )
         problem = models.ForeignKey( Problem )
         language = models.ForeignKey( Language )
-        status = models.CharField( max_length=25, default="Waiting")
+        status = models.CharField( max_length=3, default="WAI", choices = STATUS_CODE)
         time = models.FloatField('Time Elapsed', null = True)
         memory = models.FloatField('Memory Used', null = True)
         userCode = models.FileField('User Program', upload_to = 'dummy_field' )
