@@ -171,7 +171,7 @@ public:
       MYSQL_ROW row;
       db.setQuery( str );
       db.useQuery();
-      int k = 0;
+      int count = 0;
       noOfTestCases = db.noOfRows();
       cout << "No of testCases = " << noOfTestCases << endl;
       int fileIds[noOfTestCases][2];
@@ -184,14 +184,39 @@ public:
       db.freeResult();
       
       stringstream out;
+      vector <int> file_to_create;
+      vector <int>::iterator it;
       out << "SELECT content FROM database_files_file WHERE id IN ( ";
       for( int i = 0; i < noOfTestCases; i++)
       {
          //cout << "TestCase "<< i <<":"<< endl;
          //cout << "i:" << fileIds[i][0] << " "
          //     << "o:" << fileIds[i][1] << endl;
-         out << fileIds[i][0] << ", " << fileIds[i][1] << ", "; 
-      }
+	 // check if file exists
+	 stringstream filename;
+	 filename << "cache/";
+	 filename << fileIds[i][0];
+	 ifstream ifile(filename.str().c_str());
+	 if( !ifile.good() )
+	 {
+	 out << fileIds[i][0] << ", "; 
+	 file_to_create.push_back( fileIds[i][0] );
+	 }
+	 ifile.close();
+	 filename.str( string() );
+
+	 filename << "cache/";
+	 filename << fileIds[i][1];
+	 ifile.open( filename.str().c_str() );
+	 if( !ifile.good() )
+	 {
+	 out << fileIds[i][1] << ", "; 
+	 file_to_create.push_back( fileIds[i][1] );
+	 }
+	 ifile.close();
+	}
+      if( file_to_create.size() > 0 )
+      {
       str = out.str();
       unsigned found = str.find_last_of(",");
       str[found] = ' ';
@@ -199,35 +224,27 @@ public:
       cout << str << endl;
       db.setQuery(str);
       db.useQuery();
-      
-      for( int i=0; i < noOfTestCases; i++ )
+     
+      for( it=file_to_create.begin(); it != file_to_create.end(); it++ )
       {
-         
          string c, filename;
-         //input file
          row = db.getRow();
          c.assign( row[0] );
          c = base64_decode(c);
          out.str( string() );
-         out << "environment/input" << i;
+         out << "cache/" << *it;
          filename = out.str();
-         //cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
+         cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
          ofstream file( filename.c_str() );
          file << c;
          file.close();
-         
-         //output file
-         row = db.getRow();
-         c.assign( row[0] );
-         c = base64_decode(c);
-         out.str( string() );
-         out << "environment/output" << i;
-         filename = out.str();
-         //cout << "Creating file " << filename << " with contents"<< endl << c << endl;
-         file.open( filename.c_str() );
-         file << c;
-         file.close();
       }
+      }
+      else
+      {
+	 cout << "...All files in cache " << endl;
+      }
+
       
       // run the code
       int ret;
@@ -240,11 +257,11 @@ public:
       {
          if( error) break;
          out.str( string() );
-         out << "environment/input" << i;
+         out << "cache/" << fileIds[i][0];
          string input = out.str();
          
          out.str( string() );
-         out << "environment/output" << i;
+         out << "cache/" << fileIds[i][1];
          string output = out.str();
          
          out.str( string() );
@@ -259,17 +276,10 @@ public:
          
 
          cout << "Running TestCase " << i+1 << ": " << final << endl;
-         //start timer
-         //gettimeofday(&begin, NULL);
          ret=system(final.c_str());
-         //gettimeofday(&end, NULL);
-         //end timer
          result=WEXITSTATUS(ret);
-
-         //timeElapsed=(end.tv_sec - begin.tv_sec)+(end.tv_usec-begin.tv_usec)/1000000.0;
-
-
-         if(result!=0)
+         
+	 if(result!=0)
          {
             error=true;
             if(result==124)
