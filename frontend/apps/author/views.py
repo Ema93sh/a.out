@@ -51,6 +51,7 @@ def addProblem( request ):
 def editProblem( request, problem_code ):
         problem = get_object_or_404( Problem, code = problem_code )
         testcase= TestCase.objects.filter(problem=problem)
+        tformset=formset_factory(TestCaseForm,extra=2)
         curr=len(testcase)
         tcdic=[]
         for tc in testcase:

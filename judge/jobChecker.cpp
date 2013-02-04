@@ -13,6 +13,9 @@ int main()
 	db.connect();
    	int num_row;  
 	MYSQL_ROW row;
+        system("mkdir environment");
+        system("mkdir cache");
+        printf("judge is running and ready to judge submissions\n");
    	while(true)
    	{
 
