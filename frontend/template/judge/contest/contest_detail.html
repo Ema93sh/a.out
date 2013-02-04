@@ -9,6 +9,18 @@
 
 {% block head %}
 <link type="text/css" rel="stylesheet" href="/static/demo_table.css">
+<link type="text/css" rel="stylesheet" href="/static/jquery.countdown.css">
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript" src="/static/jquery.countdown.js"></script>
+
+<script type="text/javascript">
+function clock(time) {
+   var austDay = new Date(time);
+   $('.defaultCountdown').countdown({until: austDay, format: 'HMS',description:"to end of contest",
+         expiryText:"Contest has ended",alwaysExpire:true});
+   $('#year').text(austDay.getFullYear());
+}
+</script>
 {% endblock %}
 
 {% block content %}
@@ -73,8 +85,12 @@
 {% endblock %}
 
 {% block sidebar %}
-
 <h2>
+<div class="defaultCountdown">
+<script type="text/javascript">
+clock("{{contest.endTime.isoformat}}");
+</script>
+</div>
 	{% if request.user.is_authenticated %}
 	<a href="/submission/contest/{{ contest.code }}/{{ request.user}}/">My Submission</a>&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}<a href="/submission/contest/{{ contest.code }}/">All Submission</a></h2>
 {% if contest_recent_activity.count > 0 %}

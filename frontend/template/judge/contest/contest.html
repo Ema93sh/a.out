@@ -10,17 +10,34 @@
 {% block head %}
 <script type="text/javascript" src="/static/jquery.js"></script>
 <script type="text/javascript" src="/static/jquery.dataTables.js"></script>
+<link type="text/css" rel="stylesheet" href="/static/jquery.countdown.css">
+<style type="text/css">
+@import "/static/jquery.countdown.css";
+
+.defaultCountdown { width: 140px; height: 25px; }
+.defaultCountdown { border: white; font-size: 60%;}
+</style>
+<script type="text/javascript" src="/static/jquery.countdown.js"></script>
+
 <script>
 	$(document).ready(function(){
 		    // Initalize DataTables on <table> tag with id="example"
 			        $('#example').dataTable();  
 			});
 </script>
-
+<script type="text/javascript">
+function clock(time,desctxt,exptxt) {
+   var austDay = new Date(time);
+   $('.defaultCountdown').countdown({until: austDay, format: 'HMS',description:desctxt,
+                                    expiryText:exptxt,alwaysExpire:true});
+   $('#year').text(austDay.getFullYear());
+}
+</script>
 <link type="text/css" rel="stylesheet" href="/static/demo_table.css">
 {% endblock %}
 
 {% block content %}
+
 <h2 class="title"><a href="/contest">Contest</a></h2>
 <div id="entry">
 	<h3>Present Contest:</h3>
@@ -50,7 +67,11 @@
 			{% else %}
 			
 			{% if not  contest.registrationEnded %}
-			<td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
+			<td>
+			<div class="defaultCountdown">
+			<script type="text/javascript">clock("{{contest.registration_end_time.isoformat}}","","");
+			</script></div>
+			<a href="/contest/{{ contest.code }}/register/">Register</a></td>
 			{% else %}
 			<td>Not Registered</td>
 			{% endif %}
@@ -76,7 +97,7 @@
 			<th> Register </th>
 		</thead>
 		<tbody>
-		{% for contest in future_contest %}	
+		{% for contest in future_contest %}
 		<tr class="gradeA">
 			<td>{{ contest.code }} </td>
 			<td>{{ contest.name }}</td>
@@ -86,8 +107,12 @@
 			<td>registered</td>
 			{% else %}
 				{% if not contest.registrationEnded %} 
-				   <td><a href="/contest/{{ contest.code }}/register/">Register</a></td>
-				{% else %}
+				<td><div class="defaultCountdown">
+				<script type="text/javascript">clock("{{contest.registration_end_time.isoformat}}","","");
+				</script></div>
+				<a href="/contest/{{ contest.code }}/register/">Register</a>
+				</td>
+				{% else %}{{contest.registration_end_time.isoformat}
 				   <td>Registration Ended</td>
 				{% endif %}
 			{% endif %}
