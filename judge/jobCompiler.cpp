@@ -15,7 +15,7 @@ class JobCompiler
 {
 private:
    Database db;
-   string path, sourcePath;
+   string  sourcePath;
    string submissionId, problemId, languageId, codeId;
    string timeLimit, memoryLimit, sourceLimit;
    double timeElapsed, memElapsed,allowedError;
@@ -25,8 +25,7 @@ private:
 public:
    JobCompiler( string subid ): db()
    {
-      //path = "/Learning/Projects/GIT/a.out/";
-      path = "/home/vinith/GIT/a.out/";
+     
       submissionId = subid;
       result = 0;
       error = false;

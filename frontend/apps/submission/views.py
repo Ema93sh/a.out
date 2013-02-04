@@ -64,7 +64,7 @@ def viewSubmission( request, submission_id ):
            return HttpResponseForbidden("You do not have permission to view this link")
 	
 	code = submission.userCode.read()
-	syntax = str(submission.language.name).lower()
+	syntax = str(submission.language.syntax).lower()
 	return render_to_response( 'judge/submission/view_solution.html',  { 'code': code, 'submission': submission, 'syntax': syntax, 'style': 'manni', 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request))
 
 @login_required
