@@ -25,22 +25,26 @@
 	<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
          <thead>
 		 <tr>
-                        <th>Sub id</th>
+			 <th>Sub id</th>
+			 <th>Date</th>
+			 <th>User Name</th>
 			 <th>Code</th>
 			 <th>Language</th>
 			 <th>Time</th>
-			 <th>Result</th>
+			 <th>Result</tih>
 		 </tr>
 	 </thead>
 	 <tbody>
 		 {% for submission in submissions %}
 		 <tr class="gradeA">
-                        <td><a href="/submission/view/{{submission.id }}/">{{ submission.id }}</a></td>
-			 {% if submission.contest_id %}
-                        <td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
+			 <td><a href="/submission/view/{{submission.id }}/">{{ submission.id }}</a></td>
+			 <td>{{ submission.date }}</td>
+			<td><a href="/account/{{ submission.user }}/">{{ submission.user }}</a></td>
+			{% if submission.contest_id %}
+			 <td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
                         {% else %}
                         <td><a href="/practice/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
-                        {% endif %}
+			{% endif %}
 			 <td>{{ submission.language.name }}</td>
 			 {% if submission.time > 0 %}
 			 <td>{{ submission.time }}</td>

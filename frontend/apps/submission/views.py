@@ -41,7 +41,7 @@ class submissionListView( ListView ):
 		return context
 
         def get_queryset( self ):
-		queryset = Submission.objects.all()
+		queryset = Submission.objects.all().order_by("-date")
 		if 'user_name' in self.kwargs:
 			user = get_object_or_404( User, username = self.kwargs['user_name'] )
 			queryset = queryset.filter( user = user )
