@@ -12,6 +12,7 @@
 <div id="entry">
 	<form method="post" action="{{ request.path }}"  enctype="multipart/form-data">
 		{% csrf_token %}
+		<h3> {{ error }} </h3>
 		{{ form.as_p }}
 		{{ form.userCode.errors }}
 

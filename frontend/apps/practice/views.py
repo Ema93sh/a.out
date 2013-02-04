@@ -57,6 +57,8 @@ def submit( request, problem_code ):
 		form = SubmissionForm(request.POST, request.FILES)
 		if form.is_valid():
 			language = get_object_or_404( Language, pk= request.POST['language'] )
+			if request.FILES['userCode'].size>problem.sourceLimit:
+                           return render_to_response( 'judge/practice/submit.html', { 'error':'file too large', 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
 			submission = Submission( user=request.user, problem = problem, language = form.cleaned_data['language'], userCode = request.FILES['userCode'] );
 			submission.save()
 			jobqueue = JobQueue( submission = submission )

@@ -166,6 +166,8 @@ def submit( request, problem_code, contest_code ):
 				raise Http404
 			if request.user not in contest.users.all():
                                 raise Http404 #Should modify to tell that user is not registered
+                        if request.FILES['userCode'].size > problem.sourceLimit:
+                           return render_to_response( 'judge/contest/submit.html', {'error':'file too large',  'contest': contest, 'problem' : problem, 'form' : form, 'recent_activity': get_recent_activity() }, context_instance=RequestContext(request) )
                         submission = Submission( user=request.user, problem = problem, contest = contest, language = form.cleaned_data['language'], userCode = request.FILES['userCode'] );
                         submission.save()
                         jobqueue = JobQueue( submission = submission )
