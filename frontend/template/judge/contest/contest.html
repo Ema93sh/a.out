@@ -71,7 +71,7 @@ function clock(time,desctxt,exptxt) {
 			<div class="defaultCountdown">
 			<script type="text/javascript">clock("{{contest.registration_end_time.isoformat}}","","");
 			</script></div>
-			<a href="/contest/{{ contest.code }}/register/">Register</a></td>
+			<center><a href="/contest/{{ contest.code }}/register/">Register</a></center></td>
 			{% else %}
 			<td>Not Registered</td>
 			{% endif %}
@@ -110,9 +110,9 @@ function clock(time,desctxt,exptxt) {
 				<td><div class="defaultCountdown">
 				<script type="text/javascript">clock("{{contest.registration_end_time.isoformat}}","","");
 				</script></div>
-				<a href="/contest/{{ contest.code }}/register/">Register</a>
+				<center><a href="/contest/{{ contest.code }}/register/">Register</a></center>
 				</td>
-				{% else %}{{contest.registration_end_time.isoformat}
+				{% else %}
 				   <td>Registration Ended</td>
 				{% endif %}
 			{% endif %}
