@@ -9,7 +9,7 @@ class Submission( models.Model ):
         STATUS_CODE  = (
                         ('ERR', 'Internal Error'),
                         ('WAI', 'Waiting'),
-                        ('ACC', 'Accpeted'),
+                        ('ACC', 'Accepted'),
                         ('TLE', 'Time Limit Exceeded'),
                         ('RTE', 'Runtime Error'),
                         ('CTE', 'Compile Time Error'),

@@ -27,7 +27,6 @@ class submissionListView( ListView ):
         model = Submission
         template_name = 'judge/submission/submissions.html'
         context_object_name = 'submissions'
-        paginate_by = 10
 
 	def get_context_data(self, **kwargs):
                 # Call the base implementation first to get a context
