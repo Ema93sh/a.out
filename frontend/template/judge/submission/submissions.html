@@ -12,7 +12,10 @@
 <script>
 	$(document).ready(function(){
 		// Initalize DataTables on <table> tag with id="example"
-			$('#example').dataTable();  
+			$('#example').dataTable(
+    			  "aaSorting": [[ 2, "desc"]], 
+			); 
+
 		});
 </script>
 <link type="text/css" rel="stylesheet" href="/static/demo_table.css">
