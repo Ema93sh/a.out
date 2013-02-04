@@ -38,7 +38,7 @@
 		 {% for submission in submissions %}
 		 <tr class="gradeA">
 			 <td><a href="/submission/view/{{submission.id }}/">{{ submission.id }}</a></td>
-			 <td>{{ submission.date }}</td>
+			 <td>{{ submission.date.isoformat }}</td>
 			<td><a href="/account/{{ submission.user }}/">{{ submission.user }}</a></td>
 			{% if submission.contest_id %}
 			 <td><a href="/contest/{{ submission.contest.code }}/problem/{{ submission.problem.code }}/">{{ submission.problem.code }}</a></td>
