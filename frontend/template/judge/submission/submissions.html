@@ -12,8 +12,9 @@
 <script>
 	$(document).ready(function(){
 		// Initalize DataTables on <table> tag with id="example"
-			$('#example').dataTable(
-    			  "aaSorting": [[ 2, "desc"]], 
+			$('#example').dataTable({
+				"aaSorting": [[ 1, "desc"]]
+			}
 			); 
 
 		});
