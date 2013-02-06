@@ -147,9 +147,7 @@ def register( request, contest_code ):
         if contest.registration_end_time > timezone.now():
                 if request.user not in contest.users.all():
                         contest.users.add( request.user )
-                        rank = Ranking( contest = contest, user = request.user )
                         contest.save()
-                        rank.save()
 		else:
 			return HttpResponse("User already registered")
         return redirect('/contest')

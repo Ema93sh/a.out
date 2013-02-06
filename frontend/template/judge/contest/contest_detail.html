@@ -29,6 +29,7 @@ function clock(time) {
 	<h3>Problems - <a href="ranking">View Ranking</a></h3>
 	<br>
 	<br>
+	{% if contest.isActice %}
 	<table class ="display">
 		<thead>
 			<th>Code</th>
@@ -81,6 +82,9 @@ function clock(time) {
 			{% endfor %}
 		</tbody>
 	</table>
+	{% else %}
+	<h3> Contest has not started yet! </h3>
+	{% endif %}
 </div>
 {% endblock %}
 
