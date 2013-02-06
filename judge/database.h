@@ -2,6 +2,7 @@
 #include <string>
 #include <my_global.h>
 #include <mysql.h>
+#include <exception>
 
 using namespace std;
 
@@ -31,8 +32,13 @@ class Database
 
 		void error_handle()
 		{
-			printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
-			exit(0);
+                       char excpt[100];
+                       sprintf(excpt,"Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+                       //printf(excpt,"Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+			//exit(0);
+                       //printf("%s\n",excpt);
+                       string s(excpt);
+                       throw s;
 		}
 		
 		void setLocalhost( string host )
@@ -88,7 +94,10 @@ class Database
 		{
 			return mysql_num_rows(result);
 		}
-
+                
+               int ping(){
+                  return mysql_ping(conn);
+               }
 		MYSQL_ROW getRow()
 		{
 			return mysql_fetch_row(result);

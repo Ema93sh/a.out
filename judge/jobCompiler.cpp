@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <cmath>
+#include<map>
 #include "base64.h"
 #include "database.h"
 
@@ -22,10 +23,11 @@ private:
    string compileParam;
    bool error, isCompiled,decimalJudge;
    int result, noOfTestCases;
+   map<int,map<int,int> >fileIds;
 public:
    JobCompiler( string subid ): db()
    {
-     
+      
       submissionId = subid;
       result = 0;
       error = false;
@@ -43,12 +45,12 @@ public:
       return ret;
    }
    double getTime(){
-     ifstream fin("environment/exectime.txt");
-     string s;
-     fin>>s;
-     cout<<"--------------> "<<s<<endl;
-     fin.close();
-     return atof(s.c_str());
+      ifstream fin("environment/exectime.txt");
+      string s;
+      fin>>s;
+      cout<<"--------------> "<<s<<endl;
+      fin.close();
+      return atof(s.c_str());
    }
    bool isDecimal(string s){
       int dotcount=0,l=s.length();
@@ -67,6 +69,7 @@ public:
    {
       checkType();
       compileIt();
+      downloadTestFiles();
       runIt();
       updateResult();
    }
@@ -160,10 +163,8 @@ public:
          }
       }
    }
-   void runIt()
-   {
+   void downloadTestFiles(){
       if(error) return;
-      
       // create all the input and output files files
       string str = "SELECT input, output FROM testcase WHERE problem_id = "+ problemId;
       cout << str << endl;
@@ -173,7 +174,6 @@ public:
       int count = 0;
       noOfTestCases = db.noOfRows();
       cout << "No of testCases = " << noOfTestCases << endl;
-      int fileIds[noOfTestCases][2];
       for( int i = 0; i < noOfTestCases; i++)
       {
          row = db.getRow();
@@ -191,62 +191,65 @@ public:
          //cout << "TestCase "<< i <<":"<< endl;
          //cout << "i:" << fileIds[i][0] << " "
          //     << "o:" << fileIds[i][1] << endl;
-	 // check if file exists
-	 stringstream filename;
-	 filename << "cache/";
-	 filename << fileIds[i][0];
-	 ifstream ifile(filename.str().c_str());
-	 if( !ifile.good() )
-	 {
-	 out << fileIds[i][0] << ", "; 
-	 file_to_create.push_back( fileIds[i][0] );
-	 }
-	 ifile.close();
-	 filename.str( string() );
-
-	 filename << "cache/";
-	 filename << fileIds[i][1];
-	 ifile.open( filename.str().c_str() );
-	 if( !ifile.good() )
-	 {
-	 out << fileIds[i][1] << ", "; 
-	 file_to_create.push_back( fileIds[i][1] );
-	 }
-	 ifile.close();
-	}
+         // check if file exists
+         stringstream filename;
+         filename << "cache/";
+         filename << fileIds[i][0];
+         ifstream ifile(filename.str().c_str());
+         if( !ifile.good() )
+         {
+            out << fileIds[i][0] << ", "; 
+            file_to_create.push_back( fileIds[i][0] );
+         }
+         ifile.close();
+         filename.str( string() );
+         
+         filename << "cache/";
+         filename << fileIds[i][1];
+         ifile.open( filename.str().c_str() );
+         if( !ifile.good() )
+         {
+            out << fileIds[i][1] << ", "; 
+            file_to_create.push_back( fileIds[i][1] );
+         }
+         ifile.close();
+      }
       if( file_to_create.size() > 0 )
       {
-      str = out.str();
-      unsigned found = str.find_last_of(",");
-      str[found] = ' ';
-      str[found+1] = ')';
-      cout << str << endl;
-      db.setQuery(str);
-      db.useQuery();
-     
-      for( it=file_to_create.begin(); it != file_to_create.end(); it++ )
-      {
-         string c, filename;
-         row = db.getRow();
-         c.assign( row[0] );
-         c = base64_decode(c);
-         out.str( string() );
-         out << "cache/" << *it;
-         filename = out.str();
-         cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
-         ofstream file( filename.c_str() );
-         file << c;
-         file.close();
-      }
+         str = out.str();
+         unsigned found = str.find_last_of(",");
+         str[found] = ' ';
+         str[found+1] = ')';
+         cout << str << endl;
+         db.setQuery(str);
+         db.useQuery();
+         
+         for( it=file_to_create.begin(); it != file_to_create.end(); it++ )
+         {
+            string c, filename;
+            row = db.getRow();
+            c.assign( row[0] );
+            c = base64_decode(c);
+            out.str( string() );
+            out << "cache/" << *it;
+            filename = out.str();
+            cout << "Creating file " << filename << " with contents:"<< endl << c << endl;
+            ofstream file( filename.c_str() );
+            file << c;
+            file.close();
+         }
       }
       else
       {
-	 cout << "...All files in cache " << endl;
+         cout << "...All files in cache " << endl;
       }
-
-      
+   }
+   void runIt()
+   {
+      if(error) return;
       // run the code
       int ret;
+      stringstream out;
       struct timeval begin, end; //for calculating time elapsed
       string strtimeLimit="timeout "+timeLimit+"s  ";
       string final ="";
@@ -271,14 +274,14 @@ public:
             final = strtimeLimit + timeCmd  +string(" environment/./executable ") + "< " + input + " > " + user_output;
          else
             final = strtimeLimit + timeCmd  +compileParam + " " +  sourcePath + " < " + input + " > " + user_output;
-        
          
-
+         
+         
          cout << "Running TestCase " << i+1 << ": " << final << endl;
          ret=system(final.c_str());
          result=WEXITSTATUS(ret);
          
-	 if(result!=0)
+         if(result!=0)
          {
             error=true;
             if(result==124)
@@ -286,8 +289,8 @@ public:
             else
                result=2;
          }else{
-           currtime=getTime();
-           timeElapsed=max(timeElapsed,currtime);
+            currtime=getTime();
+            timeElapsed=max(timeElapsed,currtime);
          }
          cout<<"timeElapsed: "<<timeElapsed<<endl;
          cout<< "Checking output.." << endl;
@@ -353,14 +356,14 @@ public:
       stringstream sttime;
       sttime<<timeElapsed;
       if(result.compare("ACC")==0)
-        query = "UPDATE submissions SET status =\"" + result +"\" ,time=\""+ sttime.str() +"\" WHERE id =" +submissionId;
+         query = "UPDATE submissions SET status =\"" + result +"\" ,time=\""+ sttime.str() +"\" WHERE id =" +submissionId;
       else  
-       query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
+         query = "UPDATE submissions SET status =\"" + result +"\" WHERE id =" +submissionId;
       cout << "Update: " << query <<  endl;
       db.simpleQuery(query);
- //     system("rm -r environment/*");
+      //     system("rm -r environment/*");
    }
-
+   
    
    int getResultCode()
    {
@@ -407,13 +410,24 @@ public:
 
 int main(int argc, char *argv[])
 {
+   bool error;
+   int tryCount=0;
    if( argc < 2 )
    {
       cout << "Usage: ./jobcompiler jobid" << endl;
       return 1;
    }
-   JobCompiler jc( argv[1] );
-   jc.doWork();
+   do{
+      try{
+         JobCompiler jc( argv[1] );
+         error=false;
+         jc.doWork();
+      } catch(string s){
+         error=true;
+         tryCount++;
+         printf("%s\nrejudging submission\n\n",s.c_str());
+      }
+   }while(error==true&&tryCount<4);
    //cout << jc.getResult() << endl;
    return 0;
 }
