@@ -31,3 +31,7 @@ Todo:
 	-Calculate rank in case of contest
 
 by vinith, Ema93sh
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Ema93sh/a.out/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
